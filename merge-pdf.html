@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Merge PDF Files Online Free — No Upload, No Signup | PaperDesk</title>
+<meta name="description" content="Combine multiple PDF files into one document for free. Works entirely in your browser — your files are never uploaded to a server.">
+<link rel="canonical" href="https://example.com/merge-pdf.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Merge PDF - PaperDesk",
+  "applicationCategory": "Utility",
+  "operatingSystem": "Any (runs in browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+}
+</script>
+</head>
+<body>
+
+<header class="site">
+  <div class="bar">
+    <a href="index.html" class="brand">PaperDesk<span class="dot">.</span></a>
+    <nav class="top">
+      <a href="merge-pdf.html">Merge PDF</a>
+      <a href="word-to-pdf.html">Word to PDF</a>
+      <a href="image-to-pdf.html">Image to PDF</a>
+    </nav>
+  </div>
+</header>
+
+<section class="tool-page">
+  <div class="wrap">
+    <div class="crumb"><a href="index.html">Home</a> / Merge PDF</div>
+    <h1>Merge PDF files</h1>
+    <p class="subtitle">Add two or more PDF files below. Drag to reorder them, then combine into a single PDF — all in your browser.</p>
+
+    <div class="dropzone" id="dropzone">
+      <div class="icon">📄</div>
+      <div class="primary">Drop PDF files here, or click to choose</div>
+      <div class="secondary">You can add more than one file</div>
+      <input type="file" id="fileInput" accept="application/pdf" multiple>
+    </div>
+
+    <div class="file-list" id="fileList" style="display:none;"></div>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="mergeBtn" disabled>Merge PDFs</button>
+      <button class="btn btn-ghost" id="clearBtn" style="display:none;">Clear all</button>
+    </div>
+    <div class="status" id="status"></div>
+
+    <div class="privacy-note">Your files are processed locally on your device using JavaScript. They are never uploaded anywhere, which also means they never touch our servers.</div>
+
+    <div class="article">
+      <h2>How to merge PDF files online</h2>
+      <ol>
+        <li>Click the box above and choose the PDF files you want to combine.</li>
+        <li>Check the order in the list — the files will be joined top to bottom.</li>
+        <li>Press "Merge PDFs" and your combined file will download automatically.</li>
+      </ol>
+      <p>This tool works fully offline once the page has loaded, since the merging happens on your own device rather than a remote server. That makes it fast and keeps private documents private.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="wrap">
+    <div><a href="index.html">Home</a><a href="#">Privacy</a></div>
+    <div>© 2026 PaperDesk</div>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+<script>
+const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('fileInput');
+const fileListEl = document.getElementById('fileList');
+const mergeBtn = document.getElementById('mergeBtn');
+const clearBtn = document.getElementById('clearBtn');
+const statusEl = document.getElementById('status');
+
+let files = [];
+
+dropzone.addEventListener('click', () => fileInput.click());
+dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('drag'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag'));
+dropzone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropzone.classList.remove('drag');
+  addFiles(e.dataTransfer.files);
+});
+fileInput.addEventListener('change', e => addFiles(e.target.files));
+
+function addFiles(list) {
+  for (const f of list) {
+    if (f.type === 'application/pdf') files.push(f);
+  }
+  renderList();
+}
+
+function renderList() {
+  if (files.length === 0) {
+    fileListEl.style.display = 'none';
+    clearBtn.style.display = 'none';
+    mergeBtn.disabled = true;
+    return;
+  }
+  fileListEl.style.display = 'block';
+  clearBtn.style.display = 'inline-block';
+  mergeBtn.disabled = files.length < 2;
+  fileListEl.innerHTML = files.map((f, i) => `
+    <div class="file-row">
+      <span class="name">📄 ${f.name}</span>
+      <span class="size">${(f.size/1024).toFixed(0)} KB
+        <button class="remove" data-i="${i}">remove</button>
+      </span>
+    </div>`).join('');
+  fileListEl.querySelectorAll('.remove').forEach(btn => {
+    btn.addEventListener('click', () => {
+      files.splice(Number(btn.dataset.i), 1);
+      renderList();
+    });
+  });
+  statusEl.textContent = files.length === 1 ? 'Add at least one more file to merge.' : '';
+  statusEl.className = 'status';
+}
+
+clearBtn.addEventListener('click', () => { files = []; renderList(); });
+
+mergeBtn.addEventListener('click', async () => {
+  mergeBtn.disabled = true;
+  statusEl.textContent = 'Merging…';
+  statusEl.className = 'status';
+  try {
+    const { PDFDocument } = PDFLib;
+    const mergedPdf = await PDFDocument.create();
+    for (const file of files) {
+      const bytes = await file.arrayBuffer();
+      const pdf = await PDFDocument.load(bytes);
+      const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+      pages.forEach(p => mergedPdf.addPage(p));
+    }
+    const mergedBytes = await mergedPdf.save();
+    const blob = new Blob([mergedBytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'merged.pdf';
+    a.click();
+    statusEl.textContent = 'Done — your merged PDF has downloaded.';
+    statusEl.className = 'status ok';
+  } catch (err) {
+    statusEl.textContent = 'Something went wrong: ' + err.message;
+    statusEl.className = 'status';
+  }
+  mergeBtn.disabled = files.length < 2;
+});
+</script>
+</body>
+</html>

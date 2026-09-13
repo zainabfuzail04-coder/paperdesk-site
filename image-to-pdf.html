@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Convert Image to PDF Online Free (JPG, PNG) | PaperDesk</title>
+<meta name="description" content="Convert JPG or PNG images into a PDF file for free, right in your browser. No upload, no signup, no watermark.">
+<link rel="canonical" href="https://example.com/image-to-pdf.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Image to PDF - PaperDesk",
+  "applicationCategory": "Utility",
+  "operatingSystem": "Any (runs in browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+}
+</script>
+</head>
+<body>
+
+<header class="site">
+  <div class="bar">
+    <a href="index.html" class="brand">PaperDesk<span class="dot">.</span></a>
+    <nav class="top">
+      <a href="merge-pdf.html">Merge PDF</a>
+      <a href="word-to-pdf.html">Word to PDF</a>
+      <a href="image-to-pdf.html">Image to PDF</a>
+    </nav>
+  </div>
+</header>
+
+<section class="tool-page">
+  <div class="wrap">
+    <div class="crumb"><a href="index.html">Home</a> / Image to PDF</div>
+    <h1>Image to PDF</h1>
+    <p class="subtitle">Add one or more JPG or PNG images. Each image becomes one page, in the order you add them.</p>
+
+    <div class="dropzone" id="dropzone">
+      <div class="icon">🖼️</div>
+      <div class="primary">Drop images here, or click to choose</div>
+      <div class="secondary">JPG or PNG, any number of files</div>
+      <input type="file" id="fileInput" accept="image/jpeg,image/png" multiple>
+    </div>
+
+    <div class="file-list" id="fileList" style="display:none;"></div>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="convertBtn" disabled>Convert to PDF</button>
+      <button class="btn btn-ghost" id="clearBtn" style="display:none;">Clear all</button>
+    </div>
+    <div class="status" id="status"></div>
+
+    <div class="privacy-note">Images are converted locally in your browser. Nothing is uploaded to any server.</div>
+
+    <div class="article">
+      <h2>How to convert images to PDF</h2>
+      <ol>
+        <li>Choose or drag in the images you want to convert.</li>
+        <li>Reorder if needed by removing and re-adding files.</li>
+        <li>Press "Convert to PDF" to download a single PDF containing every image as its own page.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="wrap">
+    <div><a href="index.html">Home</a><a href="#">Privacy</a></div>
+    <div>© 2026 PaperDesk</div>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script>
+const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('fileInput');
+const fileListEl = document.getElementById('fileList');
+const convertBtn = document.getElementById('convertBtn');
+const clearBtn = document.getElementById('clearBtn');
+const statusEl = document.getElementById('status');
+
+let files = [];
+
+dropzone.addEventListener('click', () => fileInput.click());
+dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('drag'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag'));
+dropzone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropzone.classList.remove('drag');
+  addFiles(e.dataTransfer.files);
+});
+fileInput.addEventListener('change', e => addFiles(e.target.files));
+
+function addFiles(list) {
+  for (const f of list) {
+    if (f.type === 'image/jpeg' || f.type === 'image/png') files.push(f);
+  }
+  renderList();
+}
+
+function renderList() {
+  if (files.length === 0) {
+    fileListEl.style.display = 'none';
+    clearBtn.style.display = 'none';
+    convertBtn.disabled = true;
+    return;
+  }
+  fileListEl.style.display = 'block';
+  clearBtn.style.display = 'inline-block';
+  convertBtn.disabled = false;
+  fileListEl.innerHTML = files.map((f, i) => `
+    <div class="file-row">
+      <span class="name">🖼️ ${f.name}</span>
+      <span class="size">${(f.size/1024).toFixed(0)} KB
+        <button class="remove" data-i="${i}">remove</button>
+      </span>
+    </div>`).join('');
+  fileListEl.querySelectorAll('.remove').forEach(btn => {
+    btn.addEventListener('click', () => {
+      files.splice(Number(btn.dataset.i), 1);
+      renderList();
+    });
+  });
+}
+
+clearBtn.addEventListener('click', () => { files = []; renderList(); });
+
+function loadImage(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = URL.createObjectURL(file);
+  });
+}
+
+convertBtn.addEventListener('click', async () => {
+  convertBtn.disabled = true;
+  statusEl.textContent = 'Converting…';
+  statusEl.className = 'status';
+  try {
+    const { jsPDF } = window.jspdf;
+    let doc;
+    for (let i = 0; i < files.length; i++) {
+      const img = await loadImage(files[i]);
+      const orientation = img.width > img.height ? 'l' : 'p';
+      const pageParams = [img.width, img.height];
+      if (i === 0) {
+        doc = new jsPDF({ orientation, unit: 'px', format: pageParams });
+      } else {
+        doc.addPage(pageParams, orientation);
+      }
+      doc.addImage(img, 'JPEG', 0, 0, img.width, img.height);
+    }
+    doc.save('converted.pdf');
+    statusEl.textContent = 'Done — your PDF has downloaded.';
+    statusEl.className = 'status ok';
+  } catch (err) {
+    statusEl.textContent = 'Something went wrong: ' + err.message;
+  }
+  convertBtn.disabled = false;
+});
+</script>
+</body>
+</html>
