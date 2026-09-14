@@ -156,144 +156,143 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 
-  <script>
+<script>
 
-    const wordInput = document.getElementById("wordInput");
-    const fileList = document.getElementById("fileList");
-    const convertBtn = document.getElementById("convertBtn");
-    const status = document.getElementById("status");
+const wordInput = document.getElementById("wordInput");
+const fileList = document.getElementById("fileList");
+const convertBtn = document.getElementById("convertBtn");
+const status = document.getElementById("status");
 
-    let selectedFile = null;
+let selectedFile = null;
+
+wordInput.addEventListener("change", function () {
+
+  selectedFile = this.files[0];
+
+  fileList.innerHTML = "";
+  status.textContent = "";
+
+  if (!selectedFile) {
+    convertBtn.disabled = true;
+    return;
+  }
+
+  const item = document.createElement("div");
+
+  item.className = "file-item";
+
+  item.innerHTML = `
+    <span>📄 ${selectedFile.name}</span>
+    <span>${(selectedFile.size / 1024).toFixed(1)} KB</span>
+  `;
+
+  fileList.appendChild(item);
+
+  convertBtn.disabled = false;
+
+});
 
 
-    wordInput.addEventListener("change", function () {
+convertBtn.addEventListener("click", async function () {
 
-      selectedFile = this.files[0];
+  if (!selectedFile) {
+    alert("Please select a Word file first.");
+    return;
+  }
 
-      fileList.innerHTML = "";
-      status.textContent = "";
+  convertBtn.disabled = true;
+  convertBtn.textContent = "Converting...";
+  status.textContent = "Preparing your document...";
 
-      if (!selectedFile) {
+  let container = null;
 
-        convertBtn.disabled = true;
+  try {
 
-        return;
+    const arrayBuffer = await selectedFile.arrayBuffer();
 
-      }
-
-
-      const item = document.createElement("div");
-
-      item.className = "file-item";
-
-      item.innerHTML = `
-        <span>📄 ${selectedFile.name}</span>
-        <span>${(selectedFile.size / 1024).toFixed(1)} KB</span>
-      `;
-
-      fileList.appendChild(item);
-
-      convertBtn.disabled = false;
-
+    const result = await mammoth.convertToHtml({
+      arrayBuffer: arrayBuffer
     });
 
+    container = document.createElement("div");
 
-    convertBtn.addEventListener("click", async function () {
+    container.style.position = "absolute";
+    container.style.left = "0";
+    container.style.top = "0";
+    container.style.width = "794px";
+    container.style.backgroundColor = "#ffffff";
+    container.style.padding = "40px";
+    container.style.boxSizing = "border-box";
+    container.style.fontFamily = "Arial, sans-serif";
+    container.style.fontSize = "14px";
+    container.style.lineHeight = "1.6";
+    container.style.color = "#000000";
 
-      if (!selectedFile) {
+    container.innerHTML = result.value;
 
-        alert("Please select a Word file first.");
+    document.body.appendChild(container);
 
-        return;
+    status.textContent = "Creating PDF...";
 
-      }
+    await new Promise(resolve => setTimeout(resolve, 300));
 
+    await html2pdf()
+      .set({
+        margin: [10, 10, 10, 10],
+        filename: "paperdesk-word-to-pdf.pdf",
 
-      convertBtn.disabled = true;
-      convertBtn.textContent = "Converting...";
-      status.textContent = "Preparing your document...";
+        image: {
+          type: "jpeg",
+          quality: 0.98
+        },
 
+        html2canvas: {
+          scale: 2,
+          backgroundColor: "#ffffff",
+          useCORS: true,
+          logging: false
+        },
 
-      try {
+        jsPDF: {
+          unit: "mm",
+          format: "a4",
+          orientation: "portrait"
+        },
 
-        const arrayBuffer = await selectedFile.arrayBuffer();
+        pagebreak: {
+          mode: ["css", "legacy"]
+        }
 
+      })
+      .from(container)
+      .save();
 
-        const result = await mammoth.convertToHtml(
-          { arrayBuffer: arrayBuffer }
-        );
+    status.textContent = "✅ PDF created successfully!";
 
+  } catch (error) {
 
-        const container = document.createElement("div");
+    console.error("Word to PDF error:", error);
 
-        container.style.position = "fixed";
-        container.style.left = "-10000px";
-        container.style.top = "0";
-        container.style.width = "794px";
-        container.style.background = "white";
-        container.style.padding = "50px";
-        container.style.boxSizing = "border-box";
-        container.style.fontFamily = "Arial, sans-serif";
-        container.style.fontSize = "14px";
-        container.style.lineHeight = "1.6";
-        container.innerHTML = result.value;
+    status.textContent = "";
 
+    alert(
+      "Could not convert this Word file. Please try again."
+    );
 
-        document.body.appendChild(container);
+  } finally {
 
+    if (container) {
+      container.remove();
+    }
 
-        status.textContent = "Creating PDF...";
+    convertBtn.disabled = false;
+    convertBtn.textContent = "Convert to PDF";
 
+  }
 
-        await html2pdf()
-          .set({
-            margin: 10,
-            filename: "paperdesk-word-to-pdf.pdf",
-            image: {
-              type: "jpeg",
-              quality: 0.95
-            },
-            html2canvas: {
-              scale: 2,
-              useCORS: true
-            },
-            jsPDF: {
-              unit: "mm",
-              format: "a4",
-              orientation: "portrait"
-            },
-            pagebreak: {
-              mode: ["css", "legacy"]
-            }
-          })
-          .from(container)
-          .save();
+});
 
-
-        container.remove();
-
-        status.textContent = "✅ PDF created successfully!";
-
-
-      } catch (error) {
-
-        console.error(error);
-
-        status.textContent = "";
-
-        alert(
-          "Could not convert this Word file. Please try a simpler DOCX document."
-        );
-
-      }
-
-
-      convertBtn.disabled = false;
-      convertBtn.textContent = "Convert to PDF";
-
-    });
-
-  </script>
+</script>
 
 </body>
 </html>
