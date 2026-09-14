@@ -5,15 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Merge PDF — PaperDesk</title>
+
   <meta name="description"
-        content="Merge multiple PDF files into one PDF with PaperDesk.">
+        content="Merge one or multiple PDF files into one PDF with PaperDesk.">
+
   <meta name="robots" content="index, follow">
 
-<meta name="keywords"
-      content="merge PDF, merge PDF online, combine PDF files, PDF merger, free PDF tools">
+  <meta name="keywords"
+        content="merge PDF, merge PDF online, combine PDF files, PDF merger, free PDF tools">
 
-<link rel="canonical"
-      href="https://zainabfuzail04-coder.github.io/paperdesk-site/merge-pdf.html">
+  <link rel="canonical"
+        href="https://zainabfuzail04-coder.github.io/paperdesk-site/merge-pdf.html">
 
   <link rel="stylesheet" href="style.css">
 </head>
@@ -50,7 +52,7 @@
       <h1>Merge PDF</h1>
 
       <p>
-        Combine multiple PDF files into one organized document.
+        Combine one or multiple PDF files into one organized document.
       </p>
 
     </div>
@@ -64,7 +66,7 @@
       <h3>Select your PDF files</h3>
 
       <p>
-        Choose two or more PDF files to combine.
+        Choose one or multiple PDF files to combine.
       </p>
 
       <label for="pdfInput" class="btn btn-primary">
@@ -98,6 +100,11 @@
         Merge PDFs
       </button>
 
+    </div>
+
+
+    <div id="status"
+         style="margin-top:18px; text-align:center; color:#697386; font-size:14px;">
     </div>
 
 
@@ -145,116 +152,343 @@
 
 
   <!-- MERGE SCRIPT -->
-<script>
+  <script>
 
-const pdfInput = document.getElementById("pdfInput");
-const fileList = document.getElementById("fileList");
-const mergeBtn = document.getElementById("mergeBtn");
+    const pdfInput =
+      document.getElementById("pdfInput");
 
-let selectedFiles = [];
+    const fileList =
+      document.getElementById("fileList");
 
-pdfInput.addEventListener("change", function () {
+    const mergeBtn =
+      document.getElementById("mergeBtn");
 
-  selectedFiles = Array.from(this.files);
-
-  fileList.innerHTML = "";
-
-  selectedFiles.forEach((file, index) => {
-
-    const item = document.createElement("div");
-
-    item.className = "file-item";
-
-    item.innerHTML = `
-      <span>📄 ${index + 1}. ${file.name}</span>
-      <span>${(file.size / 1024).toFixed(1)} KB</span>
-    `;
-
-    fileList.appendChild(item);
-
-  });
-
-  mergeBtn.disabled = selectedFiles.length < 2;
-
-});
+    const status =
+      document.getElementById("status");
 
 
-mergeBtn.addEventListener("click", async function () {
+    /*
+      Store all selected PDF files here.
+      New selections will be ADDED instead of replacing old ones.
+    */
+    let selectedFiles = [];
 
-  if (selectedFiles.length < 2) {
 
-    alert("Please select at least two PDF files.");
+    /*
+      When user selects files
+    */
+    pdfInput.addEventListener("change", function () {
 
-    return;
+      const newFiles =
+        Array.from(this.files);
 
-  }
 
-  mergeBtn.disabled = true;
-  mergeBtn.textContent = "Merging PDFs...";
+      /*
+        Add new files to the existing list.
+        Duplicate file names + sizes are ignored.
+      */
+      newFiles.forEach(function (newFile) {
 
-  try {
+        const alreadyExists =
+          selectedFiles.some(function (oldFile) {
 
-    const mergedPdf = await PDFLib.PDFDocument.create();
+            return (
+              oldFile.name === newFile.name &&
+              oldFile.size === newFile.size &&
+              oldFile.lastModified === newFile.lastModified
+            );
 
-    for (const file of selectedFiles) {
+          });
 
-      const arrayBuffer = await file.arrayBuffer();
 
-      const pdf = await PDFLib.PDFDocument.load(arrayBuffer);
+        if (!alreadyExists) {
 
-      const copiedPages = await mergedPdf.copyPages(
-        pdf,
-        pdf.getPageIndices()
-      );
+          selectedFiles.push(newFile);
 
-      copiedPages.forEach(function (page) {
-        mergedPdf.addPage(page);
+        }
+
       });
+
+
+      /*
+        Clear the input value.
+        This allows the user to select
+        the same file again later if needed.
+      */
+      this.value = "";
+
+
+      renderFileList();
+
+    });
+
+
+    /*
+      Display selected files
+    */
+    function renderFileList() {
+
+      fileList.innerHTML = "";
+
+
+      if (selectedFiles.length === 0) {
+
+        mergeBtn.disabled = true;
+
+        return;
+
+      }
+
+
+      selectedFiles.forEach(function (file, index) {
+
+        const item =
+          document.createElement("div");
+
+        item.className = "file-item";
+
+
+        item.innerHTML = `
+          <span>
+            📄 ${index + 1}. ${file.name}
+          </span>
+
+          <span>
+            ${(file.size / 1024).toFixed(1)} KB
+          </span>
+
+          <button
+            type="button"
+            class="remove-pdf"
+            data-index="${index}"
+            style="
+              margin-left:10px;
+              border:none;
+              background:none;
+              cursor:pointer;
+              font-size:16px;
+            "
+            title="Remove PDF"
+          >
+            ✕
+          </button>
+        `;
+
+
+        fileList.appendChild(item);
+
+      });
+
+
+      /*
+        Allow merge with even ONE PDF
+      */
+      mergeBtn.disabled =
+        selectedFiles.length === 0;
 
     }
 
-    const mergedBytes = await mergedPdf.save();
 
-    const blob = new Blob(
-      [mergedBytes],
-      { type: "application/pdf" }
-    );
+    /*
+      Remove a selected PDF
+    */
+    fileList.addEventListener("click", function (event) {
 
-    const url = URL.createObjectURL(blob);
+      const removeButton =
+        event.target.closest(".remove-pdf");
 
-    const link = document.createElement("a");
 
-    link.href = url;
-    link.download = "paperdesk-merged.pdf";
+      if (!removeButton) {
+        return;
+      }
 
-    document.body.appendChild(link);
 
-    link.click();
+      const index =
+        Number(removeButton.dataset.index);
 
-    document.body.removeChild(link);
 
-    setTimeout(function () {
-      URL.revokeObjectURL(url);
-    }, 1000);
+      selectedFiles.splice(index, 1);
 
-  } catch (error) {
 
-    console.error("Merge PDF Error:", error);
+      renderFileList();
 
-    alert(
-      "Could not merge the PDFs. Please make sure the selected files are valid PDF documents."
-    );
+    });
 
-  } finally {
 
-    mergeBtn.disabled = false;
-    mergeBtn.textContent = "Merge PDFs";
+    /*
+      Merge / process PDFs
+    */
+    mergeBtn.addEventListener("click", async function () {
 
-  }
+      if (selectedFiles.length === 0) {
 
-});
+        alert(
+          "Please select at least one PDF file."
+        );
 
-</script>
+        return;
+
+      }
+
+
+      mergeBtn.disabled = true;
+
+      mergeBtn.textContent =
+        "Processing...";
+
+      status.textContent =
+        "Preparing your PDF...";
+
+
+      try {
+
+        /*
+          Create a new PDF
+        */
+        const mergedPdf =
+          await PDFLib.PDFDocument.create();
+
+
+        /*
+          Process every selected PDF
+        */
+        for (
+          let i = 0;
+          i < selectedFiles.length;
+          i++
+        ) {
+
+          const file =
+            selectedFiles[i];
+
+
+          status.textContent =
+            Processing PDF ${i + 1} of ${selectedFiles.length}...;
+
+
+          const arrayBuffer =
+            await file.arrayBuffer();
+
+
+          /*
+            Load the PDF
+          */
+          const pdf =
+            await PDFLib.PDFDocument.load(
+              arrayBuffer
+            );
+
+
+          /*
+            Copy all pages
+          */
+          const copiedPages =
+            await mergedPdf.copyPages(
+              pdf,
+              pdf.getPageIndices()
+            );
+
+
+          /*
+            Add copied pages
+            in the same order
+          */
+          copiedPages.forEach(function (page) {
+
+            mergedPdf.addPage(page);
+
+          });
+
+        }
+
+
+        status.textContent =
+          "Creating PDF file...";
+
+
+        /*
+          Save the final PDF
+        */
+        const mergedBytes =
+          await mergedPdf.save();
+
+
+        /*
+          Create downloadable PDF
+        */
+        const blob =
+          new Blob(
+            [mergedBytes],
+            {
+              type: "application/pdf"
+            }
+          );
+
+
+        const url =
+          URL.createObjectURL(blob);
+
+
+        const link =
+          document.createElement("a");
+
+
+        link.href = url;
+
+        link.download =
+          "paperdesk-merged.pdf";
+
+
+        document.body.appendChild(link);
+
+
+        link.click();
+
+
+        document.body.removeChild(link);
+
+
+        /*
+          Give browser time to start download
+        */
+        setTimeout(function () {
+
+          URL.revokeObjectURL(url);
+
+        }, 3000);
+
+
+        status.textContent =
+          "✅ PDF created successfully!";
+
+
+      } catch (error) {
+
+        console.error(
+          "Merge PDF Error:",
+          error
+        );
+
+
+        status.textContent = "";
+
+
+        alert(
+          "Could not process the PDF. Please make sure the PDF file is valid and try again."
+        );
+
+      } finally {
+
+        mergeBtn.disabled = false;
+
+        mergeBtn.textContent =
+          "Merge PDFs";
+
+      }
+
+    });
+
+  </script>
 
 </body>
 </html>
