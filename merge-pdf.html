@@ -145,127 +145,116 @@
 
 
   <!-- MERGE SCRIPT -->
-  <script>
+<script>
 
-    const pdfInput = document.getElementById("pdfInput");
-    const fileList = document.getElementById("fileList");
-    const mergeBtn = document.getElementById("mergeBtn");
+const pdfInput = document.getElementById("pdfInput");
+const fileList = document.getElementById("fileList");
+const mergeBtn = document.getElementById("mergeBtn");
 
-    let selectedFiles = [];
+let selectedFiles = [];
+
+pdfInput.addEventListener("change", function () {
+
+  selectedFiles = Array.from(this.files);
+
+  fileList.innerHTML = "";
+
+  selectedFiles.forEach((file, index) => {
+
+    const item = document.createElement("div");
+
+    item.className = "file-item";
+
+    item.innerHTML = `
+      <span>📄 ${index + 1}. ${file.name}</span>
+      <span>${(file.size / 1024).toFixed(1)} KB</span>
+    `;
+
+    fileList.appendChild(item);
+
+  });
+
+  mergeBtn.disabled = selectedFiles.length < 2;
+
+});
 
 
-    pdfInput.addEventListener("change", function () {
+mergeBtn.addEventListener("click", async function () {
 
-      selectedFiles = Array.from(this.files);
+  if (selectedFiles.length < 2) {
 
-      fileList.innerHTML = "";
+    alert("Please select at least two PDF files.");
 
+    return;
 
-      selectedFiles.forEach((file, index) => {
+  }
 
-        const item = document.createElement("div");
+  mergeBtn.disabled = true;
+  mergeBtn.textContent = "Merging PDFs...";
 
-        item.className = "file-item";
+  try {
 
-        item.innerHTML = `
-          <span>📄 ${index + 1}. ${file.name}</span>
-          <span>${(file.size / 1024).toFixed(1)} KB</span>
-        `;
+    const mergedPdf = await PDFLib.PDFDocument.create();
 
-        fileList.appendChild(item);
+    for (const file of selectedFiles) {
 
+      const arrayBuffer = await file.arrayBuffer();
+
+      const pdf = await PDFLib.PDFDocument.load(arrayBuffer);
+
+      const copiedPages = await mergedPdf.copyPages(
+        pdf,
+        pdf.getPageIndices()
+      );
+
+      copiedPages.forEach(function (page) {
+        mergedPdf.addPage(page);
       });
 
+    }
 
-      mergeBtn.disabled = selectedFiles.length < 2;
+    const mergedBytes = await mergedPdf.save();
 
-    });
+    const blob = new Blob(
+      [mergedBytes],
+      { type: "application/pdf" }
+    );
 
+    const url = URL.createObjectURL(blob);
 
-    mergeBtn.addEventListener("click", async function () {
+    const link = document.createElement("a");
 
-      if (selectedFiles.length < 2) {
+    link.href = url;
+    link.download = "paperdesk-merged.pdf";
 
-        alert("Please select at least two PDF files.");
+    document.body.appendChild(link);
 
-        return;
+    link.click();
 
-      }
+    document.body.removeChild(link);
 
+    setTimeout(function () {
+      URL.revokeObjectURL(url);
+    }, 1000);
 
-      mergeBtn.disabled = true;
-      mergeBtn.textContent = "Merging PDFs...";
+  } catch (error) {
 
+    console.error("Merge PDF Error:", error);
 
-      try {
+    alert(
+      "Could not merge the PDFs. Please make sure the selected files are valid PDF documents."
+    );
 
-        const mergedPdf = await PDFLib.PDFDocument.create();
+  } finally {
 
+    mergeBtn.disabled = false;
+    mergeBtn.textContent = "Merge PDFs";
 
-        for (const file of selectedFiles) {
+  }
 
-          const arrayBuffer = await file.arrayBuffer();
+});
 
-          const pdf = await PDFLib.PDFDocument.load(arrayBuffer);
-
-          const pages = await mergedPdf.copyPages(
-            pdf,
-            pdf.getPageIndices()
-          );
-
-
-          pages.forEach((page) => {
-
-            mergedPdf.addPage(page);
-
-          });
-
-        }
-
-
-        const mergedBytes = await mergedPdf.save();
-
-
-        const blob = new Blob(
-          [mergedBytes],
-          { type: "application/pdf" }
-        );
-
-
-        const url = URL.createObjectURL(blob);
-
-        const link = document.createElement("a");
-
-        link.href = url;
-
-        link.download = "paperdesk-merged.pdf";
-
-        document.body.appendChild(link);
-
-        link.click();
-
-        link.remove();
-
-        URL.revokeObjectURL(url);
-
-
-      } catch (error) {
-
-        console.error(error);
-
-        alert(
-          "Something went wrong while merging the PDFs. Please try again."
-        );
-
-      }
-
-
-      mergeBtn.disabled = false;
-      mergeBtn.textContent = "Merge PDFs";
-
-    });
-
-  </script>
+</script>
 
 </body>
 </html>
