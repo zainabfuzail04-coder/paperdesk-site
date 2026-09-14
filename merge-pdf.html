@@ -22,7 +22,6 @@
 
 <body>
 
-  <!-- HEADER -->
   <header class="site-header">
     <nav class="navbar">
 
@@ -40,7 +39,6 @@
   </header>
 
 
-  <!-- TOOL PAGE -->
   <main class="tool-page">
 
     <div class="tool-header">
@@ -58,7 +56,6 @@
     </div>
 
 
-    <!-- UPLOAD AREA -->
     <div class="upload-box">
 
       <div class="upload-icon">📤</div>
@@ -77,18 +74,16 @@
         type="file"
         id="pdfInput"
         class="file-input"
-        accept="application/pdf"
+        accept=".pdf,application/pdf"
         multiple
       >
 
     </div>
 
 
-    <!-- FILE LIST -->
     <div id="fileList" class="file-list"></div>
 
 
-    <!-- ACTION -->
     <div class="action-area">
 
       <button
@@ -103,9 +98,15 @@
     </div>
 
 
-    <div id="status"
-         style="margin-top:18px; text-align:center; color:#697386; font-size:14px;">
-    </div>
+    <div
+      id="status"
+      style="
+        margin-top:18px;
+        text-align:center;
+        color:#697386;
+        font-size:14px;
+      "
+    ></div>
 
 
     <div class="privacy-note">
@@ -115,7 +116,6 @@
   </main>
 
 
-  <!-- FOOTER -->
   <footer class="site-footer">
 
     <div class="footer-inner">
@@ -154,125 +154,85 @@
   <!-- MERGE SCRIPT -->
   <script>
 
-    const pdfInput =
-      document.getElementById("pdfInput");
+    const pdfInput = document.getElementById("pdfInput");
+    const fileList = document.getElementById("fileList");
+    const mergeBtn = document.getElementById("mergeBtn");
+    const status = document.getElementById("status");
 
-    const fileList =
-      document.getElementById("fileList");
-
-    const mergeBtn =
-      document.getElementById("mergeBtn");
-
-    const status =
-      document.getElementById("status");
-
-
-    /*
-      Store all selected PDF files here.
-      New selections will be ADDED instead of replacing old ones.
-    */
     let selectedFiles = [];
 
 
-    /*
-      When user selects files
-    */
+    // SELECT PDF FILES
     pdfInput.addEventListener("change", function () {
 
-      const newFiles =
-        Array.from(this.files);
+      const files = Array.from(pdfInput.files);
+
+      if (files.length === 0) {
+        return;
+      }
 
 
-      /*
-        Add new files to the existing list.
-        Duplicate file names + sizes are ignored.
-      */
-      newFiles.forEach(function (newFile) {
+      // Add selected files to existing files
+      files.forEach(function (file) {
 
-        const alreadyExists =
-          selectedFiles.some(function (oldFile) {
+        const exists = selectedFiles.some(function (oldFile) {
 
-            return (
-              oldFile.name === newFile.name &&
-              oldFile.size === newFile.size &&
-              oldFile.lastModified === newFile.lastModified
-            );
+          return (
+            oldFile.name === file.name &&
+            oldFile.size === file.size &&
+            oldFile.lastModified === file.lastModified
+          );
 
-          });
+        });
 
-
-        if (!alreadyExists) {
-
-          selectedFiles.push(newFile);
-
+        if (!exists) {
+          selectedFiles.push(file);
         }
 
       });
 
 
-      /*
-        Clear the input value.
-        This allows the user to select
-        the same file again later if needed.
-      */
-      this.value = "";
+      // Show files
+      showFiles();
 
 
-      renderFileList();
+      // Reset input so user can choose more files again
+      pdfInput.value = "";
 
     });
 
 
-    /*
-      Display selected files
-    */
-    function renderFileList() {
+    // SHOW SELECTED FILES
+    function showFiles() {
 
       fileList.innerHTML = "";
 
 
-      if (selectedFiles.length === 0) {
-
-        mergeBtn.disabled = true;
-
-        return;
-
-      }
-
-
       selectedFiles.forEach(function (file, index) {
 
-        const item =
-          document.createElement("div");
+        const item = document.createElement("div");
 
         item.className = "file-item";
 
+        item.innerHTML =
+          "<span>📄 " +
+          (index + 1) +
+          ". " +
+          file.name +
+          "</span>" +
 
-        item.innerHTML = `
-          <span>
-            📄 ${index + 1}. ${file.name}
-          </span>
+          "<span>" +
+          (file.size / 1024).toFixed(1) +
+          " KB</span>" +
 
-          <span>
-            ${(file.size / 1024).toFixed(1)} KB
-          </span>
-
-          <button
-            type="button"
-            class="remove-pdf"
-            data-index="${index}"
-            style="
-              margin-left:10px;
-              border:none;
-              background:none;
-              cursor:pointer;
-              font-size:16px;
-            "
-            title="Remove PDF"
-          >
-            ✕
-          </button>
-        `;
+          "<button type='button' " +
+          "class='remove-pdf' " +
+          "data-index='" +
+          index +
+          "' " +
+          "style='margin-left:10px;border:none;background:none;cursor:pointer;font-size:16px;'>" +
+          "✕" +
+          "</button>";
 
 
         fileList.appendChild(item);
@@ -280,51 +240,50 @@
       });
 
 
-      /*
-        Allow merge with even ONE PDF
-      */
-      mergeBtn.disabled =
-        selectedFiles.length === 0;
+      // Enable button when at least ONE file exists
+      if (selectedFiles.length > 0) {
+
+        mergeBtn.disabled = false;
+
+      } else {
+
+        mergeBtn.disabled = true;
+
+      }
 
     }
 
 
-    /*
-      Remove a selected PDF
-    */
+    // REMOVE FILE
     fileList.addEventListener("click", function (event) {
 
-      const removeButton =
-        event.target.closest(".remove-pdf");
-
-
-      if (!removeButton) {
+      if (
+        !event.target.classList.contains("remove-pdf")
+      ) {
         return;
       }
 
 
       const index =
-        Number(removeButton.dataset.index);
+        parseInt(
+          event.target.getAttribute("data-index")
+        );
 
 
       selectedFiles.splice(index, 1);
 
 
-      renderFileList();
+      showFiles();
 
     });
 
 
-    /*
-      Merge / process PDFs
-    */
+    // MERGE PDF
     mergeBtn.addEventListener("click", async function () {
 
       if (selectedFiles.length === 0) {
 
-        alert(
-          "Please select at least one PDF file."
-        );
+        alert("Please select at least one PDF file.");
 
         return;
 
@@ -332,26 +291,17 @@
 
 
       mergeBtn.disabled = true;
-
-      mergeBtn.textContent =
-        "Processing...";
-
-      status.textContent =
-        "Preparing your PDF...";
+      mergeBtn.textContent = "Processing...";
+      status.textContent = "Preparing PDF...";
 
 
       try {
 
-        /*
-          Create a new PDF
-        */
         const mergedPdf =
           await PDFLib.PDFDocument.create();
 
 
-        /*
-          Process every selected PDF
-        */
+        // Process selected PDFs in order
         for (
           let i = 0;
           i < selectedFiles.length;
@@ -363,37 +313,31 @@
 
 
           status.textContent =
-            Processing PDF ${i + 1} of ${selectedFiles.length}...;
+            "Processing PDF " +
+            (i + 1) +
+            " of " +
+            selectedFiles.length +
+            "...";
 
 
-          const arrayBuffer =
+          const buffer =
             await file.arrayBuffer();
 
 
-          /*
-            Load the PDF
-          */
           const pdf =
             await PDFLib.PDFDocument.load(
-              arrayBuffer
+              buffer
             );
 
 
-          /*
-            Copy all pages
-          */
-          const copiedPages =
+          const pages =
             await mergedPdf.copyPages(
               pdf,
               pdf.getPageIndices()
             );
 
 
-          /*
-            Add copied pages
-            in the same order
-          */
-          copiedPages.forEach(function (page) {
+          pages.forEach(function (page) {
 
             mergedPdf.addPage(page);
 
@@ -403,22 +347,16 @@
 
 
         status.textContent =
-          "Creating PDF file...";
+          "Creating PDF...";
 
 
-        /*
-          Save the final PDF
-        */
-        const mergedBytes =
+        const bytes =
           await mergedPdf.save();
 
 
-        /*
-          Create downloadable PDF
-        */
         const blob =
           new Blob(
-            [mergedBytes],
+            [bytes],
             {
               type: "application/pdf"
             }
@@ -441,21 +379,16 @@
 
         document.body.appendChild(link);
 
-
         link.click();
-
 
         document.body.removeChild(link);
 
 
-        /*
-          Give browser time to start download
-        */
         setTimeout(function () {
 
           URL.revokeObjectURL(url);
 
-        }, 3000);
+        }, 5000);
 
 
         status.textContent =
@@ -474,17 +407,17 @@
 
 
         alert(
-          "Could not process the PDF. Please make sure the PDF file is valid and try again."
+          "Could not process this PDF. Please make sure the selected PDF is valid and try again."
         );
 
-      } finally {
-
-        mergeBtn.disabled = false;
-
-        mergeBtn.textContent =
-          "Merge PDFs";
-
       }
+
+
+      mergeBtn.disabled =
+        selectedFiles.length === 0;
+
+      mergeBtn.textContent =
+        "Merge PDFs";
 
     });
 
