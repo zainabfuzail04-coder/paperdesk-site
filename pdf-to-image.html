@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>PDF to Image — PaperDesk</title>
+  <meta name="description" content="Convert PDF pages to PNG images with PaperDesk.">
+
+  <link rel="stylesheet" href="assets/style.css">
+
+  <style>
+    .status {
+      margin-top: 18px;
+      text-align: center;
+      color: #697386;
+      font-size: 14px;
+    }
+
+    .result-list {
+      margin-top: 20px;
+    }
+
+    .result-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      padding: 14px;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      background: #fff;
+    }
+
+    .mini-btn {
+      padding: 8px 14px;
+      border: 0;
+      border-radius: 8px;
+      background: #e53935;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="site-header">
+    <nav class="navbar">
+
+      <a href="index.html" class="logo">
+        Paper<span>Desk</span>.
+      </a>
+
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="index.html#tools">Tools</a>
+        <a href="index.html#privacy">Privacy</a>
+      </div>
+
+    </nav>
+  </header>
+
+
+  <main class="tool-page">
+
+    <div class="tool-header">
+
+      <div class="hero-badge">
+        🖼️ PDF Converter
+      </div>
+
+      <h1>PDF to Image</h1>
+
+      <p>
+        Convert PDF pages into high-quality PNG images directly in your browser.
+      </p>
+
+    </div>
+
+
+    <div class="upload-box">
+
+      <div class="upload-icon">📤</div>
+
+      <h3>Select your PDF</h3>
+
+      <p>
+        Choose a PDF file to convert its pages into images.
+      </p>
+
+      <label for="pdfInput" class="btn btn-primary">
+        Choose PDF File
+      </label>
+
+      <input
+        type="file"
+        id="pdfInput"
+        class="file-input"
+        accept="application/pdf"
+      >
+
+    </div>
+
+
+    <div id="fileList" class="file-list"></div>
+
+
+    <div class="action-area">
+
+      <button
+        id="convertBtn"
+        class="btn btn-primary"
+        type="button"
+        disabled
+      >
+        Convert to Images
+      </button>
+
+    </div>
+
+
+    <div id="status" class="status"></div>
+
+    <div id="resultList" class="result-list"></div>
+
+
+    <div class="privacy-note">
+      🔒 Your PDF is processed directly in your browser.
+    </div>
+
+  </main>
+
+
+  <footer class="site-footer">
+
+    <div class="footer-inner">
+
+      <div class="footer-brand">
+
+        <h3>PaperDesk.</h3>
+
+        <p>
+          Simple PDF tools for everyday document work.
+        </p>
+
+      </div>
+
+      <div class="footer-links">
+
+        <a href="index.html">Home</a>
+        <a href="index.html#tools">Tools</a>
+        <a href="index.html#privacy">Privacy</a>
+
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      © 2026 PaperDesk. All rights reserved.
+    </div>
+
+  </footer>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+
+  <script>
+
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+
+    const pdfInput = document.getElementById("pdfInput");
+    const fileList = document.getElementById("fileList");
+    const convertBtn = document.getElementById("convertBtn");
+    const status = document.getElementById("status");
+    const resultList = document.getElementById("resultList");
+
+    let selectedFile = null;
+
+
+    pdfInput.addEventListener("change", function () {
+
+      selectedFile = this.files[0];
+
+      fileList.innerHTML = "";
+      resultList.innerHTML = "";
+      status.textContent = "";
+
+      if (!selectedFile) {
+
+        convertBtn.disabled = true;
+        return;
+
+      }
+
+
+      const item = document.createElement("div");
+
+      item.className = "file-item";
+
+      item.innerHTML = `
+        <span>📄 ${selectedFile.name}</span>
+        <span>${(selectedFile.size / 1024).toFixed(1)} KB</span>
+      `;
+
+      fileList.appendChild(item);
+
+      convertBtn.disabled = false;
+
+    });
+
+
+    convertBtn.addEventListener("click", async function () {
+
+      if (!selectedFile) {
+
+        alert("Please select a PDF file first.");
+        return;
+
+      }
+
+
+      convertBtn.disabled = true;
+      convertBtn.textContent = "Converting...";
+      resultList.innerHTML = "";
+      status.textContent = "Reading PDF...";
+
+
+      try {
+
+        const arrayBuffer = await selectedFile.arrayBuffer();
+
+        const pdf = await pdfjsLib.getDocument({
+          data: arrayBuffer
+        }).promise;
+
+
+        for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
+
+          status.textContent = "Converting PDF pages...";
+
+
+          const page = await pdf.getPage(pageNumber);
+
+          const viewport = page.getViewport({
+            scale: 2
+          });
+
+
+          const canvas = document.createElement("canvas");
+
+          const context = canvas.getContext("2d");
+
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+
+
+          await page.render({
+            canvasContext: context,
+            viewport: viewport
+          }).promise;
+
+
+          const blob = await new Promise(resolve => {
+
+            canvas.toBlob(
+              resolve,
+              "image/png"
+            );
+
+          });
+
+
+          const url = URL.createObjectURL(blob);
+
+
+          const resultItem = document.createElement("div");
+
+          resultItem.className = "result-item";
+
+          resultItem.innerHTML = `
+            <span>🖼️ Page ${pageNumber}</span>
+
+            <button class="mini-btn">
+              Download PNG
+            </button>
+          `;
+
+
+          const downloadButton =
+            resultItem.querySelector("button");
+
+
+          downloadButton.addEventListener("click", function () {
+
+            const link = document.createElement("a");
+
+            link.href = url;
+
+            link.download = "paperdesk-page.png";
+              
+
+            document.body.appendChild(link);
+
+            link.click();
+
+            link.remove();
+
+          });
+
+
+          resultList.appendChild(resultItem);
+
+        }
+
+
+        status.textContent = "PDF converted successfully!";
+          
+
+
+      } catch (error) {
+
+        console.error(error);
+
+        alert(
+          "Could not convert this PDF. Please try another file."
+        );
+
+        status.textContent = "";
+
+      }
+
+
+      convertBtn.disabled = false;
+      convertBtn.textContent = "Convert to Images";
+
+    });
+
+  </script>
+
+</body>
+</html>

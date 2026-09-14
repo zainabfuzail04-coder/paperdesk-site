@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Split PDF — PaperDesk</title>
+  <meta name="description" content="Extract selected pages from a PDF with PaperDesk.">
+
+  <link rel="stylesheet" href="assets/style.css">
+
+  <style>
+    .page-input {
+      width: 100%;
+      max-width: 600px;
+      padding: 14px 16px;
+      margin-top: 15px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 15px;
+      box-sizing: border-box;
+      outline: none;
+    }
+
+    .page-help {
+      margin-top: 8px;
+      color: #697386;
+      font-size: 13px;
+    }
+
+    .status {
+      margin-top: 18px;
+      text-align: center;
+      color: #697386;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="site-header">
+    <nav class="navbar">
+
+      <a href="index.html" class="logo">
+        Paper<span>Desk</span>.
+      </a>
+
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="index.html#tools">Tools</a>
+        <a href="index.html#privacy">Privacy</a>
+      </div>
+
+    </nav>
+  </header>
+
+
+  <main class="tool-page">
+
+    <div class="tool-header">
+
+      <div class="hero-badge">
+        ✂️ PDF Organizer
+      </div>
+
+      <h1>Split PDF</h1>
+
+      <p>
+        Extract the pages you need from a PDF and create a new document.
+      </p>
+
+    </div>
+
+
+    <div class="upload-box">
+
+      <div class="upload-icon">📄</div>
+
+      <h3>Select your PDF</h3>
+
+      <p>
+        Choose the PDF you want to split.
+      </p>
+
+      <label for="pdfInput" class="btn btn-primary">
+        Choose PDF File
+      </label>
+
+      <input
+        type="file"
+        id="pdfInput"
+        class="file-input"
+        accept="application/pdf"
+      >
+
+    </div>
+
+
+    <div id="fileList" class="file-list"></div>
+
+
+    <div class="upload-box" style="margin-top: 20px;">
+
+      <h3>Select pages</h3>
+
+      <p>
+        Enter page numbers or ranges.
+      </p>
+
+      <input
+        type="text"
+        id="pageInput"
+        class="page-input"
+        placeholder="Example: 1, 3, 5-7"
+      >
+
+      <div class="page-help">
+        Example: <strong>1,3,5-7</strong> extracts pages 1, 3, 5, 6 and 7.
+      </div>
+
+    </div>
+
+
+    <div class="action-area">
+
+      <button
+        id="splitBtn"
+        class="btn btn-primary"
+        type="button"
+        disabled
+      >
+        Split PDF
+      </button>
+
+    </div>
+
+
+    <div id="status" class="status"></div>
+
+
+    <div class="privacy-note">
+      🔒 Your PDF is processed directly in your browser.
+    </div>
+
+  </main>
+
+
+  <footer class="site-footer">
+
+    <div class="footer-inner">
+
+      <div class="footer-brand">
+
+        <h3>PaperDesk.</h3>
+
+        <p>
+          Simple PDF tools for everyday document work.
+        </p>
+
+      </div>
+
+      <div class="footer-links">
+
+        <a href="index.html">Home</a>
+        <a href="index.html#tools">Tools</a>
+        <a href="index.html#privacy">Privacy</a>
+
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      © 2026 PaperDesk. All rights reserved.
+    </div>
+
+  </footer>
+
+
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+
+
+  <script>
+
+    const pdfInput = document.getElementById("pdfInput");
+    const pageInput = document.getElementById("pageInput");
+    const fileList = document.getElementById("fileList");
+    const splitBtn = document.getElementById("splitBtn");
+    const status = document.getElementById("status");
+
+    let selectedFile = null;
+
+
+    pdfInput.addEventListener("change", function () {
+
+      selectedFile = this.files[0];
+
+      fileList.innerHTML = "";
+      status.textContent = "";
+
+      if (!selectedFile) {
+        splitBtn.disabled = true;
+        return;
+      }
+
+
+      const item = document.createElement("div");
+
+      item.className = "file-item";
+
+      item.innerHTML = `
+        <span>📄 ${selectedFile.name}</span>
+        <span>${(selectedFile.size / 1024).toFixed(1)} KB</span>
+      `;
+
+      fileList.appendChild(item);
+
+      splitBtn.disabled = false;
+
+    });
+
+
+    function parsePages(input, totalPages) {
+
+      const pages = new Set();
+
+      const parts = input
+        .split(",")
+        .map(part => part.trim())
+        .filter(Boolean);
+
+
+      for (const part of parts) {
+
+        if (part.includes("-")) {
+
+          const range = part
+            .split("-")
+            .map(value => parseInt(value.trim(), 10));
+
+
+          if (
+            range.length !== 2 ||
+            Number.isNaN(range[0]) ||
+            Number.isNaN(range[1])
+          ) {
+            throw new Error("Invalid page range.");
+          }
+
+
+          const start = Math.min(range[0], range[1]);
+          const end = Math.max(range[0], range[1]);
+
+
+          if (start < 1 || end > totalPages) {
+            throw new Error("Page number is outside the PDF.");
+          }
+
+
+          for (let i = start; i <= end; i++) {
+            pages.add(i);
+          }
+
+        } else {
+
+          const page = parseInt(part, 10);
+
+
+          if (
+            Number.isNaN(page) ||
+            page < 1 ||
+            page > totalPages
+          ) {
+            throw new Error("Invalid page number.");
+          }
+
+
+          pages.add(page);
+
+        }
+
+      }
+
+
+      return Array.from(pages).sort((a, b) => a - b);
+
+    }
+
+
+    splitBtn.addEventListener("click", async function () {
+
+      if (!selectedFile) {
+
+        alert("Please select a PDF file first.");
+        return;
+
+      }
+
+
+      const pageText = pageInput.value.trim();
+
+
+      if (!pageText) {
+
+        alert("Please enter the pages you want to extract.");
+        return;
+
+      }
+
+
+      splitBtn.disabled = true;
+      splitBtn.textContent = "Splitting...";
+      status.textContent = "Processing your PDF...";
+
+
+      try {
+
+        const bytes = await selectedFile.arrayBuffer();
+
+        const sourcePdf =
+          await PDFLib.PDFDocument.load(bytes);
+
+        const totalPages =
+          sourcePdf.getPageCount();
+
+        const pagesToExtract =
+          parsePages(pageText, totalPages);
+
+        const newPdf =
+          await PDFLib.PDFDocument.create();
+
+        const copiedPages =
+          await newPdf.copyPages(
+            sourcePdf,
+            pagesToExtract.map(page => page - 1)
+          );
+
+
+        copiedPages.forEach(page => {
+          newPdf.addPage(page);
+        });
+
+
+        const outputBytes =
+          await newPdf.save();
+
+
+        const blob = new Blob(
+          [outputBytes],
+          { type: "application/pdf" }
+        );
+
+
+        const url =
+          URL.createObjectURL(blob);
+
+
+        const link =
+          document.createElement("a");
+
+        link.href = url;
+        link.download = "paperdesk-split.pdf";
+
+        document.body.appendChild(link);
+
+        link.click();
+
+        link.remove();
+
+        URL.revokeObjectURL(url);
+
+
+        status.textContent =
+          "PDF split successfully!";
+
+
+      } catch (error) {
+
+        console.error(error);
+
+        alert(
+          error.message ||
+          "Could not split the PDF. Please try again."
+        );
+
+        status.textContent = "";
+
+      }
+
+
+      splitBtn.disabled = false;
+      splitBtn.textContent = "Split PDF";
+
+    });
+
+  </script>
+
+</body>
+</html>

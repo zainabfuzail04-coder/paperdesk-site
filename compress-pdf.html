@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Compress PDF — PaperDesk</title>
+  <meta name="description" content="Reduce PDF file size with PaperDesk.">
+
+  <link rel="stylesheet" href="assets/style.css">
+
+  <style>
+    .status {
+      margin-top: 18px;
+      text-align: center;
+      color: #697386;
+      font-size: 14px;
+    }
+
+    .quality-box {
+      margin-top: 20px;
+    }
+
+    .quality-select {
+      width: 100%;
+      max-width: 600px;
+      padding: 14px 16px;
+      margin-top: 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 15px;
+      background: white;
+    }
+
+    .info-text {
+      margin-top: 12px;
+      color: #697386;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <nav class="navbar">
+
+      <a href="index.html" class="logo">
+        Paper<span>Desk</span>.
+      </a>
+
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="index.html#tools">Tools</a>
+        <a href="index.html#privacy">Privacy</a>
+      </div>
+
+    </nav>
+  </header>
+
+
+  <!-- TOOL -->
+  <main class="tool-page">
+
+    <div class="tool-header">
+
+      <div class="hero-badge">
+        📦 PDF Optimizer
+      </div>
+
+      <h1>Compress PDF</h1>
+
+      <p>
+        Reduce the size of a PDF for easier sharing and storage.
+      </p>
+
+    </div>
+
+
+    <!-- UPLOAD -->
+    <div class="upload-box">
+
+      <div class="upload-icon">📄</div>
+
+      <h3>Select your PDF</h3>
+
+      <p>
+        Choose the PDF you want to compress.
+      </p>
+
+      <label for="pdfInput" class="btn btn-primary">
+        Choose PDF File
+      </label>
+
+      <input
+        type="file"
+        id="pdfInput"
+        class="file-input"
+        accept="application/pdf"
+      >
+
+    </div>
+
+
+    <!-- FILE -->
+    <div id="fileList" class="file-list"></div>
+
+
+    <!-- QUALITY -->
+    <div class="upload-box quality-box">
+
+      <h3>Compression level</h3>
+
+      <select id="qualitySelect" class="quality-select">
+
+        <option value="0.75">
+          Recommended — Balanced
+        </option>
+
+        <option value="0.55">
+          High Compression — Smaller File
+        </option>
+
+        <option value="0.90">
+          Low Compression — Better Quality
+        </option>
+
+      </select>
+
+      <div class="info-text">
+        Higher compression may reduce image quality.
+      </div>
+
+    </div>
+
+
+    <!-- ACTION -->
+    <div class="action-area">
+
+      <button
+        id="compressBtn"
+        class="btn btn-primary"
+        type="button"
+        disabled
+      >
+        Compress PDF
+      </button>
+
+    </div>
+
+
+    <div id="status" class="status"></div>
+
+
+    <div class="privacy-note">
+      🔒 Your PDF is processed directly in your browser.
+    </div>
+
+  </main>
+
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+
+    <div class="footer-inner">
+
+      <div class="footer-brand">
+
+        <h3>PaperDesk.</h3>
+
+        <p>
+          Simple PDF tools for everyday document work.
+        </p>
+
+      </div>
+
+      <div class="footer-links">
+
+        <a href="index.html">Home</a>
+        <a href="index.html#tools">Tools</a>
+        <a href="index.html#privacy">Privacy</a>
+
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      © 2026 PaperDesk. All rights reserved.
+    </div>
+
+  </footer>
+
+
+  <!-- PDF.JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+  <!-- JSPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+
+  <script>
+
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+
+    const pdfInput =
+      document.getElementById("pdfInput");
+
+    const fileList =
+      document.getElementById("fileList");
+
+    const qualitySelect =
+      document.getElementById("qualitySelect");
+
+    const compressBtn =
+      document.getElementById("compressBtn");
+
+    const status =
+      document.getElementById("status");
+
+
+    let selectedFile = null;
+
+
+    pdfInput.addEventListener("change", function () {
+
+      selectedFile = this.files[0];
+
+      fileList.innerHTML = "";
+      status.textContent = "";
+
+
+      if (!selectedFile) {
+
+        compressBtn.disabled = true;
+
+        return;
+
+      }
+
+
+      const item =
+        document.createElement("div");
+
+      item.className = "file-item";
+
+
+      item.innerHTML = `
+        <span>📄 ${selectedFile.name}</span>
+        <span>${(selectedFile.size / 1024).toFixed(1)} KB</span>
+      `;
+
+
+      fileList.appendChild(item);
+
+      compressBtn.disabled = false;
+
+    });
+
+
+    compressBtn.addEventListener("click", async function () {
+
+      if (!selectedFile) {
+
+        alert("Please select a PDF file first.");
+
+        return;
+
+      }
+
+
+      compressBtn.disabled = true;
+
+      compressBtn.textContent = "Compressing...";
+
+      status.textContent = "Reading PDF...";
+
+
+      try {
+
+        const arrayBuffer =
+          await selectedFile.arrayBuffer();
+
+
+        const pdf =
+          await pdfjsLib.getDocument({
+            data: arrayBuffer
+          }).promise;
+
+
+        const quality =
+          Number(qualitySelect.value);
+
+
+        const { jsPDF } =
+          window.jspdf;
+
+
+        let outputPdf = null;
+
+
+        for (
+          let pageNumber = 1;
+          pageNumber <= pdf.numPages;
+          pageNumber++
+        ) {
+
+          status.textContent =
+            "Compressing PDF pages...";
+
+
+          const page =
+            await pdf.getPage(pageNumber);
+
+
+          const viewport =
+            page.getViewport({
+              scale: 1.35
+            });
+
+
+          const canvas =
+            document.createElement("canvas");
+
+
+          const context =
+            canvas.getContext("2d");
+
+
+          canvas.width =
+            viewport.width;
+
+          canvas.height =
+            viewport.height;
+
+
+          await page.render({
+            canvasContext: context,
+            viewport: viewport
+          }).promise;
+
+
+          const imageData =
+            canvas.toDataURL(
+              "image/jpeg",
+              quality
+            );
+
+
+          const width =
+            viewport.width;
+
+          const height =
+            viewport.height;
+
+
+          const pageWidth = 210;
+
+          const pageHeight =
+            pageWidth * height / width;
+
+
+          if (!outputPdf) {
+
+            outputPdf =
+              new jsPDF({
+                orientation:
+                  pageHeight > pageWidth
+                    ? "portrait"
+                    : "landscape",
+
+                unit: "mm",
+
+                format: [
+                  pageWidth,
+                  pageHeight
+                ]
+              });
+
+          } else {
+
+            outputPdf.addPage([
+              pageWidth,
+              pageHeight
+            ]);
+
+          }
+
+
+          outputPdf.addImage(
+            imageData,
+            "JPEG",
+            0,
+            0,
+            pageWidth,
+            pageHeight,
+            undefined,
+            "FAST"
+          );
+
+        }
+
+
+        status.textContent =
+          "Creating compressed PDF...";
+
+
+        outputPdf.save(
+          "paperdesk-compressed.pdf"
+        );
+
+
+        status.textContent =
+          "PDF compressed successfully!";
+
+
+      } catch (error) {
+
+        console.error(error);
+
+        alert(
+          "Could not compress this PDF. Please try another file."
+        );
+
+        status.textContent = "";
+
+      }
+
+
+      compressBtn.disabled = false;
+
+      compressBtn.textContent =
+        "Compress PDF";
+
+    });
+
+  </script>
+
+</body>
+</html>
