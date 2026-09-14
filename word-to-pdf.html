@@ -8,11 +8,11 @@
   <meta name="description" content="Convert Word DOCX files to PDF with PaperDesk.">
   <meta name="robots" content="index, follow">
 
-<meta name="keywords"
-      content="Word to PDF, DOCX to PDF, convert Word to PDF, Word PDF converter, free PDF tools">
+  <meta name="keywords"
+        content="Word to PDF, DOCX to PDF, convert Word to PDF, Word PDF converter, free PDF tools">
 
-<link rel="canonical"
-      href="https://zainabfuzail04-coder.github.io/paperdesk-site/word-to-pdf.html">
+  <link rel="canonical"
+        href="https://zainabfuzail04-coder.github.io/paperdesk-site/word-to-pdf.html">
 
   <link rel="stylesheet" href="style.css">
 
@@ -22,6 +22,38 @@
       color: #697386;
       text-align: center;
       font-size: 14px;
+    }
+
+    .pdf-render-area {
+      position: fixed;
+      left: -100000px;
+      top: 0;
+      width: 794px;
+      background: #ffffff;
+      color: #000000;
+      z-index: -1;
+      overflow: visible;
+    }
+
+    .pdf-content {
+      width: 794px;
+      box-sizing: border-box;
+      padding: 40px;
+      background: #ffffff;
+      color: #000000;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .pdf-content img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .pdf-content table {
+      max-width: 100%;
+      border-collapse: collapse;
     }
   </style>
 </head>
@@ -156,143 +188,202 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 
-<script>
+  <script>
 
-const wordInput = document.getElementById("wordInput");
-const fileList = document.getElementById("fileList");
-const convertBtn = document.getElementById("convertBtn");
-const status = document.getElementById("status");
+    const wordInput = document.getElementById("wordInput");
+    const fileList = document.getElementById("fileList");
+    const convertBtn = document.getElementById("convertBtn");
+    const status = document.getElementById("status");
 
-let selectedFile = null;
-
-wordInput.addEventListener("change", function () {
-
-  selectedFile = this.files[0];
-
-  fileList.innerHTML = "";
-  status.textContent = "";
-
-  if (!selectedFile) {
-    convertBtn.disabled = true;
-    return;
-  }
-
-  const item = document.createElement("div");
-
-  item.className = "file-item";
-
-  item.innerHTML = `
-    <span>📄 ${selectedFile.name}</span>
-    <span>${(selectedFile.size / 1024).toFixed(1)} KB</span>
-  `;
-
-  fileList.appendChild(item);
-
-  convertBtn.disabled = false;
-
-});
+    let selectedFile = null;
 
 
-convertBtn.addEventListener("click", async function () {
+    /* SELECT WORD FILE */
+    wordInput.addEventListener("change", function () {
 
-  if (!selectedFile) {
-    alert("Please select a Word file first.");
-    return;
-  }
+      selectedFile = this.files[0];
 
-  convertBtn.disabled = true;
-  convertBtn.textContent = "Converting...";
-  status.textContent = "Preparing your document...";
+      fileList.innerHTML = "";
+      status.textContent = "";
 
-  let container = null;
+      if (!selectedFile) {
+        convertBtn.disabled = true;
+        return;
+      }
 
-  try {
+      const item = document.createElement("div");
 
-    const arrayBuffer = await selectedFile.arrayBuffer();
+      item.className = "file-item";
 
-    const result = await mammoth.convertToHtml({
-      arrayBuffer: arrayBuffer
+      item.innerHTML = `
+        <span>📄 ${selectedFile.name}</span>
+        <span>${(selectedFile.size / 1024).toFixed(1)} KB</span>
+      `;
+
+      fileList.appendChild(item);
+
+      convertBtn.disabled = false;
+
     });
 
-    container = document.createElement("div");
 
-    container.style.position = "absolute";
-    container.style.left = "0";
-    container.style.top = "0";
-    container.style.width = "794px";
-    container.style.backgroundColor = "#ffffff";
-    container.style.padding = "40px";
-    container.style.boxSizing = "border-box";
-    container.style.fontFamily = "Arial, sans-serif";
-    container.style.fontSize = "14px";
-    container.style.lineHeight = "1.6";
-    container.style.color = "#000000";
+    /* CONVERT TO PDF */
+    convertBtn.addEventListener("click", async function () {
 
-    container.innerHTML = result.value;
+      if (!selectedFile) {
+        alert("Please select a Word file first.");
+        return;
+      }
 
-    document.body.appendChild(container);
+      convertBtn.disabled = true;
+      convertBtn.textContent = "Converting...";
+      status.textContent = "Reading Word document...";
 
-    status.textContent = "Creating PDF...";
 
-    await new Promise(resolve => setTimeout(resolve, 300));
+      let renderArea = null;
 
-    await html2pdf()
-      .set({
-        margin: [10, 10, 10, 10],
-        filename: "paperdesk-word-to-pdf.pdf",
 
-        image: {
-          type: "jpeg",
-          quality: 0.98
-        },
+      try {
 
-        html2canvas: {
-          scale: 2,
-          backgroundColor: "#ffffff",
-          useCORS: true,
-          logging: false
-        },
+        /* READ DOCX */
+        const arrayBuffer = await selectedFile.arrayBuffer();
 
-        jsPDF: {
-          unit: "mm",
-          format: "a4",
-          orientation: "portrait"
-        },
 
-        pagebreak: {
-          mode: ["css", "legacy"]
+        /* CONVERT DOCX TO HTML */
+        const result = await mammoth.convertToHtml({
+          arrayBuffer: arrayBuffer
+        });
+
+
+        if (!result.value || result.value.trim() === "") {
+          throw new Error("Word document contains no readable content.");
         }
 
-      })
-      .from(container)
-      .save();
 
-    status.textContent = "✅ PDF created successfully!";
+        status.textContent = "Preparing document...";
 
-  } catch (error) {
 
-    console.error("Word to PDF error:", error);
+        /* CREATE PDF RENDER AREA */
+        renderArea = document.createElement("div");
 
-    status.textContent = "";
+        renderArea.className = "pdf-render-area";
 
-    alert(
-      "Could not convert this Word file. Please try again."
-    );
 
-  } finally {
+        const content = document.createElement("div");
 
-    if (container) {
-      container.remove();
-    }
+        content.className = "pdf-content";
 
-    convertBtn.disabled = false;
-    convertBtn.textContent = "Convert to PDF";
+        content.innerHTML = result.value;
 
-  }
 
-});
+        renderArea.appendChild(content);
 
-</script>
+        document.body.appendChild(renderArea);
+
+
+        /* WAIT FOR BROWSER TO RENDER */
+        await new Promise(resolve => {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(resolve);
+          });
+        });
+
+
+        status.textContent = "Creating PDF...";
+
+
+        /* CREATE PDF */
+        await html2pdf()
+          .set({
+
+            margin: [10, 10, 10, 10],
+
+            filename: "paperdesk-word-to-pdf.pdf",
+
+            image: {
+              type: "jpeg",
+              quality: 0.95
+            },
+
+            html2canvas: {
+
+              scale: 2,
+
+              backgroundColor: "#ffffff",
+
+              useCORS: true,
+
+              allowTaint: true,
+
+              logging: false,
+
+              letterRendering: true
+
+            },
+
+            jsPDF: {
+
+              unit: "mm",
+
+              format: "a4",
+
+              orientation: "portrait",
+
+              compress: true
+
+            },
+
+            pagebreak: {
+
+              mode: [
+                "css",
+                "legacy"
+              ]
+
+            }
+
+          })
+          .from(content)
+          .save();
+
+
+        status.textContent =
+          "✅ PDF created successfully!";
+
+
+      } catch (error) {
+
+        console.error(
+          "Word to PDF Error:",
+          error
+        );
+
+        status.textContent = "";
+
+        alert(
+          "Could not convert this Word file. Please try again."
+        );
+
+
+      } finally {
+
+        /* REMOVE TEMPORARY CONTENT */
+
+        if (renderArea) {
+          renderArea.remove();
+        }
+
+
+        convertBtn.disabled = false;
+
+        convertBtn.textContent =
+          "Convert to PDF";
+
+      }
+
+    });
+
+  </script>
 
 </body>
 </html>
