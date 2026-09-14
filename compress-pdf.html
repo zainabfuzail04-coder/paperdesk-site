@@ -203,244 +203,210 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 
-  <script>
+<script>
 
-    pdfjsLib.GlobalWorkerOptions.workerSrc =
-      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
+const pdfInput = document.getElementById("pdfInput");
+const fileList = document.getElementById("fileList");
+const qualitySelect = document.getElementById("qualitySelect");
+const compressBtn = document.getElementById("compressBtn");
+const status = document.getElementById("status");
 
-    const pdfInput =
-      document.getElementById("pdfInput");
+let selectedFile = null;
 
-    const fileList =
-      document.getElementById("fileList");
+pdfInput.addEventListener("change", function () {
 
-    const qualitySelect =
-      document.getElementById("qualitySelect");
+  selectedFile = this.files[0];
 
-    const compressBtn =
-      document.getElementById("compressBtn");
+  fileList.innerHTML = "";
+  status.textContent = "";
 
-    const status =
-      document.getElementById("status");
+  if (!selectedFile) {
+    compressBtn.disabled = true;
+    return;
+  }
 
+  const item = document.createElement("div");
 
-    let selectedFile = null;
+  item.className = "file-item";
 
+  item.innerHTML = `
+    <span>📄 ${selectedFile.name}</span>
+    <span>${(selectedFile.size / 1024).toFixed(1)} KB</span>
+  `;
 
-    pdfInput.addEventListener("change", function () {
+  fileList.appendChild(item);
 
-      selectedFile = this.files[0];
+  compressBtn.disabled = false;
+});
 
-      fileList.innerHTML = "";
-      status.textContent = "";
+compressBtn.addEventListener("click", async function () {
 
+  if (!selectedFile) {
+    alert("Please select a PDF file first.");
+    return;
+  }
 
-      if (!selectedFile) {
+  compressBtn.disabled = true;
+  compressBtn.textContent = "Compressing...";
+  status.textContent = "Reading PDF...";
 
-        compressBtn.disabled = true;
+  try {
 
-        return;
+    const arrayBuffer = await selectedFile.arrayBuffer();
 
-      }
+    const pdf = await pdfjsLib.getDocument({
+      data: new Uint8Array(arrayBuffer)
+    }).promise;
 
+    const quality = Number(qualitySelect.value);
 
-      const item =
-        document.createElement("div");
+    const { jsPDF } = window.jspdf;
 
-      item.className = "file-item";
+    let outputPdf = null;
 
+    for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
 
-      item.innerHTML = `
-        <span>📄 ${selectedFile.name}</span>
-        <span>${(selectedFile.size / 1024).toFixed(1)} KB</span>
-      `;
+      status.textContent =
+        Compressing page ${pageNumber} of ${pdf.numPages}...;
 
+      const page = await pdf.getPage(pageNumber);
 
-      fileList.appendChild(item);
+      const originalViewport = page.getViewport({ scale: 1 });
 
-      compressBtn.disabled = false;
+      const scale = 1.5;
 
-    });
+      const viewport = page.getViewport({
+        scale: scale
+      });
 
+      const canvas = document.createElement("canvas");
 
-    compressBtn.addEventListener("click", async function () {
+      const context = canvas.getContext("2d", {
+        alpha: false
+      });
 
-      if (!selectedFile) {
+      canvas.width = Math.ceil(viewport.width);
+      canvas.height = Math.ceil(viewport.height);
 
-        alert("Please select a PDF file first.");
+      context.fillStyle = "#ffffff";
+      context.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
 
-        return;
+      await page.render({
+        canvasContext: context,
+        viewport: viewport
+      }).promise;
 
-      }
+      const imageData = canvas.toDataURL(
+        "image/jpeg",
+        quality
+      );
 
+      const pageWidth = 210;
 
-      compressBtn.disabled = true;
+      const pageHeight =
+        pageWidth *
+        originalViewport.height /
+        originalViewport.width;
 
-      compressBtn.textContent = "Compressing...";
+      if (!outputPdf) {
 
-      status.textContent = "Reading PDF...";
+        outputPdf = new jsPDF({
+          orientation:
+            pageHeight > pageWidth
+              ? "portrait"
+              : "landscape",
 
+          unit: "mm",
 
-      try {
-
-        const arrayBuffer =
-          await selectedFile.arrayBuffer();
-
-
-        const pdf =
-          await pdfjsLib.getDocument({
-            data: arrayBuffer
-          }).promise;
-
-
-        const quality =
-          Number(qualitySelect.value);
-
-
-        const { jsPDF } =
-          window.jspdf;
-
-
-        let outputPdf = null;
-
-
-        for (
-          let pageNumber = 1;
-          pageNumber <= pdf.numPages;
-          pageNumber++
-        ) {
-
-          status.textContent =
-            "Compressing PDF pages...";
-
-
-          const page =
-            await pdf.getPage(pageNumber);
-
-
-          const viewport =
-            page.getViewport({
-              scale: 1.35
-            });
-
-
-          const canvas =
-            document.createElement("canvas");
-
-
-          const context =
-            canvas.getContext("2d");
-
-
-          canvas.width =
-            viewport.width;
-
-          canvas.height =
-            viewport.height;
-
-
-          await page.render({
-            canvasContext: context,
-            viewport: viewport
-          }).promise;
-
-
-          const imageData =
-            canvas.toDataURL(
-              "image/jpeg",
-              quality
-            );
-
-
-          const width =
-            viewport.width;
-
-          const height =
-            viewport.height;
-
-
-          const pageWidth = 210;
-
-          const pageHeight =
-            pageWidth * height / width;
-
-
-          if (!outputPdf) {
-
-            outputPdf =
-              new jsPDF({
-                orientation:
-                  pageHeight > pageWidth
-                    ? "portrait"
-                    : "landscape",
-
-                unit: "mm",
-
-                format: [
-                  pageWidth,
-                  pageHeight
-                ]
-              });
-
-          } else {
-
-            outputPdf.addPage([
-              pageWidth,
-              pageHeight
-            ]);
-
-          }
-
-
-          outputPdf.addImage(
-            imageData,
-            "JPEG",
-            0,
-            0,
+          format: [
             pageWidth,
-            pageHeight,
-            undefined,
-            "FAST"
-          );
+            pageHeight
+          ],
 
-        }
+          compress: true
+        });
 
+      } else {
 
-        status.textContent =
-          "Creating compressed PDF...";
-
-
-        outputPdf.save(
-          "paperdesk-compressed.pdf"
+        outputPdf.addPage(
+          [
+            pageWidth,
+            pageHeight
+          ],
+          pageHeight > pageWidth
+            ? "portrait"
+            : "landscape"
         );
-
-
-        status.textContent =
-          "PDF compressed successfully!";
-
-
-      } catch (error) {
-
-        console.error(error);
-
-        alert(
-          "Could not compress this PDF. Please try another file."
-        );
-
-        status.textContent = "";
 
       }
 
+      outputPdf.addImage(
+        imageData,
+        "JPEG",
+        0,
+        0,
+        pageWidth,
+        pageHeight,
+        undefined,
+        "FAST"
+      );
 
-      compressBtn.disabled = false;
+      canvas.width = 1;
+      canvas.height = 1;
+    }
 
-      compressBtn.textContent =
-        "Compress PDF";
+    status.textContent = "Creating compressed PDF...";
 
-    });
+    const pdfBlob = outputPdf.output("blob");
 
-  </script>
+    const url = URL.createObjectURL(pdfBlob);
+
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "paperdesk-compressed.pdf";
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+
+    setTimeout(() => {
+      URL.revokeObjectURL(url);
+    }, 2000);
+
+    status.textContent =
+      "✅ PDF compressed successfully!";
+
+  } catch (error) {
+
+    console.error("Compress PDF Error:", error);
+
+    alert(
+      "Could not compress this PDF. Please try another PDF file."
+    );
+
+    status.textContent = "";
+
+  } finally {
+
+    compressBtn.disabled = false;
+    compressBtn.textContent = "Compress PDF";
+
+  }
+
+});
+
+</script>
 
 </body>
 </html>
