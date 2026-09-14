@@ -147,151 +147,148 @@
   <!-- IMAGE TO PDF SCRIPT -->
   <script>
 
-    const imageInput = document.getElementById("imageInput");
-    const fileList = document.getElementById("fileList");
-    const convertBtn = document.getElementById("convertBtn");
+const imageInput = document.getElementById("imageInput");
+const fileList = document.getElementById("fileList");
+const convertBtn = document.getElementById("convertBtn");
 
-    let selectedFiles = [];
+let selectedFiles = [];
+
+imageInput.addEventListener("change", function () {
+
+  selectedFiles = Array.from(this.files);
+
+  fileList.innerHTML = "";
+
+  selectedFiles.forEach((file) => {
+
+    const item = document.createElement("div");
+
+    item.className = "file-item";
+
+    item.innerHTML = `
+      <span>🖼️ ${file.name}</span>
+      <span>${(file.size / 1024).toFixed(1)} KB</span>
+    `;
+
+    fileList.appendChild(item);
+
+  });
+
+  convertBtn.disabled = selectedFiles.length === 0;
+
+});
 
 
-    imageInput.addEventListener("change", function () {
+convertBtn.addEventListener("click", async function () {
 
-      selectedFiles = Array.from(this.files);
+  if (selectedFiles.length === 0) return;
 
-      fileList.innerHTML = "";
+  convertBtn.disabled = true;
+  convertBtn.textContent = "Creating PDF...";
 
-      selectedFiles.forEach((file, index) => {
+  try {
 
-        const item = document.createElement("div");
+    const { jsPDF } = window.jspdf;
 
-        item.className = "file-item";
+    const pdf = new jsPDF({
+      orientation: "portrait",
+      unit: "mm",
+      format: "a4"
+    });
 
-        item.innerHTML = `
-          <span>🖼️ ${file.name}</span>
-          <span>${(file.size / 1024).toFixed(1)} KB</span>
-        `;
+    for (let i = 0; i < selectedFiles.length; i++) {
 
-        fileList.appendChild(item);
+      const file = selectedFiles[i];
+
+      const imageData = await readImage(file);
+
+      const img = new Image();
+
+      await new Promise((resolve, reject) => {
+
+        img.onload = resolve;
+        img.onerror = reject;
+        img.src = imageData;
 
       });
 
-      convertBtn.disabled = selectedFiles.length === 0;
-
-    });
-
-
-    convertBtn.addEventListener("click", async function () {
-
-      if (selectedFiles.length === 0) {
-        return;
+      if (i > 0) {
+        pdf.addPage();
       }
 
-      convertBtn.disabled = true;
-      convertBtn.textContent = "Creating PDF...";
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
 
-      try {
+      const margin = 10;
 
-        const { jsPDF } = window.jspdf;
+      const maxWidth = pageWidth - (margin * 2);
+      const maxHeight = pageHeight - (margin * 2);
 
-        let pdf = null;
+      const imageRatio = img.naturalWidth / img.naturalHeight;
 
+      let imageWidth = maxWidth;
+      let imageHeight = imageWidth / imageRatio;
 
-        for (let i = 0; i < selectedFiles.length; i++) {
-
-          const file = selectedFiles[i];
-
-          const imageData = await readImage(file);
-
-
-          const img = new Image();
-
-          img.src = imageData;
-
-
-          await new Promise((resolve, reject) => {
-
-            img.onload = resolve;
-            img.onerror = reject;
-
-          });
-
-
-          const width = img.naturalWidth;
-          const height = img.naturalHeight;
-
-
-          const orientation =
-            width >= height ? "landscape" : "portrait";
-
-
-          if (i === 0) {
-
-            pdf = new jsPDF({
-              orientation: orientation,
-              unit: "px",
-              format: [width, height]
-            });
-
-          } else {
-
-            pdf.addPage(
-              [width, height],
-              orientation
-            );
-
-          }
-
-
-          pdf.addImage(
-            imageData,
-            file.type === "image/png" ? "PNG" : "JPEG",
-            0,
-            0,
-            width,
-            height
-          );
-
-        }
-
-
-        pdf.save("paperdesk-images.pdf");
-
-      } catch (error) {
-
-        console.error(error);
-
-        alert(
-          "Something went wrong while creating the PDF. Please try again."
-        );
-
+      if (imageHeight > maxHeight) {
+        imageHeight = maxHeight;
+        imageWidth = imageHeight * imageRatio;
       }
 
+      const x = (pageWidth - imageWidth) / 2;
+      const y = (pageHeight - imageHeight) / 2;
 
-      convertBtn.disabled = false;
-      convertBtn.textContent = "Convert to PDF";
+      const format =
+        file.type === "image/png" ? "PNG" : "JPEG";
 
-    });
-
-
-    function readImage(file) {
-
-      return new Promise((resolve, reject) => {
-
-        const reader = new FileReader();
-
-        reader.onload = function () {
-          resolve(reader.result);
-        };
-
-        reader.onerror = reject;
-
-        reader.readAsDataURL(file);
-
-      });
+      pdf.addImage(
+        imageData,
+        format,
+        x,
+        y,
+        imageWidth,
+        imageHeight,
+        undefined,
+        "FAST"
+      );
 
     }
 
-  </script>
+    pdf.save("paperdesk-images.pdf");
 
+  } catch (error) {
+
+    console.error("PDF Error:", error);
+
+    alert("PDF create nahi ho saki. Please try again.");
+
+  }
+
+  convertBtn.disabled = false;
+  convertBtn.textContent = "Convert to PDF";
+
+});
+
+
+function readImage(file) {
+
+  return new Promise((resolve, reject) => {
+
+    const reader = new FileReader();
+
+    reader.onload = function () {
+      resolve(reader.result);
+    };
+
+    reader.onerror = function () {
+      reject(new Error("Image read nahi ho saki."));
+    };
+
+    reader.readAsDataURL(file);
+
+  });
+
+}
+
+</script>
 </body>
 </html>
