@@ -28,7 +28,7 @@
   <meta property="og:url"
         content="https://zainabfuzail04-coder.github.io/paperdesk-site/compress-pdf.html">
 
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="assets/style.css">
 
   <style>
     .status {
@@ -287,7 +287,7 @@ compressBtn.addEventListener("click", async function () {
     for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
 
       status.textContent =
-        Compressing page ${pageNumber} of ${pdf.numPages}...;
+  `Compressing page ${pageNumber} of ${pdf.numPages}...`;
 
       const page = await pdf.getPage(pageNumber);
 
