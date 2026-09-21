@@ -237,9 +237,13 @@ const result = await mammoth.convertToHtml({
 
 const htmlContent = result.value;
 
+console.log("Mammoth HTML length:", htmlContent.length);
+console.log("Mammoth HTML:", htmlContent);
+
 if (!htmlContent || !htmlContent.trim()) {
   throw new Error("The Word document content could not be read.");
 }
+
 
 /* Create a clean printable document */
 const pdfContainer = document.createElement("div");
