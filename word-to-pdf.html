@@ -229,55 +229,78 @@
         chooseFileBtn.disabled = true;
         status.textContent = "Converting your Word document...";
 
-        const arrayBuffer = await selectedFile.arrayBuffer();
+      const arrayBuffer = await selectedFile.arrayBuffer();
 
-        const result = await mammoth.convertToHtml({
-          arrayBuffer: arrayBuffer
-        });
+const result = await mammoth.convertToHtml({
+  arrayBuffer: arrayBuffer
+});
 
-        const htmlContent = result.value;
+const htmlContent = result.value;
 
-        const pdfContainer = document.createElement("div");
+if (!htmlContent || !htmlContent.trim()) {
+  throw new Error("The Word document content could not be read.");
+}
 
-        pdfContainer.style.background = "#ffffff";
-        pdfContainer.style.color = "#000000";
-        pdfContainer.style.padding = "40px";
-        pdfContainer.style.width = "794px";
-        pdfContainer.style.boxSizing = "border-box";
-        pdfContainer.style.fontFamily = "Arial, sans-serif";
-        pdfContainer.style.fontSize = "14px";
-        pdfContainer.style.lineHeight = "1.6";
+const pdfContainer = document.createElement("div");
 
-        pdfContainer.innerHTML = htmlContent;
+pdfContainer.style.background = "#ffffff";
+pdfContainer.style.color = "#000000";
+pdfContainer.style.padding = "40px";
+pdfContainer.style.width = "794px";
+pdfContainer.style.boxSizing = "border-box";
+pdfContainer.style.fontFamily = "Arial, sans-serif";
+pdfContainer.style.fontSize = "14px";
+pdfContainer.style.lineHeight = "1.6";
 
-        document.body.appendChild(pdfContainer);
+pdfContainer.style.position = "absolute";
+pdfContainer.style.left = "0";
+pdfContainer.style.top = "0";
+pdfContainer.style.zIndex = "99999";
 
-        const options = {
-          margin: 0,
-          filename: selectedFile.name.replace(/\.docx$/i, "") + ".pdf",
-          image: {
-            type: "jpeg",
-            quality: 0.98
-          },
-          html2canvas: {
-            scale: 2,
-            useCORS: true
-          },
-          jsPDF: {
-            unit: "pt",
-            format: "a4",
-            orientation: "portrait"
-          }
-        };
+pdfContainer.innerHTML = htmlContent;
 
-        await html2pdf()
-          .set(options)
-          .from(pdfContainer)
-          .save();
+document.body.appendChild(pdfContainer);
 
-        pdfContainer.remove();
+/* Give the browser time to render the Word content */
+await new Promise(resolve => {
+  requestAnimationFrame(() => {
+    requestAnimationFrame(resolve);
+  });
+});
 
-        status.textContent = "Your PDF has been created successfully.";
+const options = {
+  margin: 0,
+  filename: selectedFile.name.replace(/\.docx$/i, "") + ".pdf",
+  image: {
+    type: "jpeg",
+    quality: 0.98
+  },
+  html2canvas: {
+    scale: 2,
+    useCORS: true,
+    backgroundColor: "#ffffff",
+    scrollX: 0,
+    scrollY: 0,
+    windowWidth: pdfContainer.scrollWidth
+  },
+  jsPDF: {
+    unit: "pt",
+    format: "a4",
+    orientation: "portrait"
+  },
+  pagebreak: {
+    mode: ["css", "legacy"]
+  }
+};
+
+await html2pdf()
+  .set(options)
+  .from(pdfContainer)
+  .save();
+
+pdfContainer.remove();
+
+status.textContent = "Your PDF has been created successfully.";
 
       } catch (error) {
 
