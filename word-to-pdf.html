@@ -4,399 +4,295 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Word to PDF Converter Online Free — DOCX to PDF | PaperDesk</title>
+  <title>Word to PDF Converter – Convert DOCX to PDF Online | PaperDesk</title>
 
-  <meta name="description"
-        content="Convert Word DOCX files to PDF online with PaperDesk. Turn your Word documents into PDF files directly in your browser with a simple and private converter.">
+  <meta
+    name="description"
+    content="Convert Word DOCX files to PDF online with PaperDesk. Fast, simple and private Word to PDF conversion directly in your browser. No upload required."
+  >
 
   <meta name="robots" content="index, follow">
 
-  <meta name="keywords"
-        content="Word to PDF, DOCX to PDF, Word PDF converter, convert Word to PDF online, DOCX converter, free PDF tools">
+  <meta
+    name="keywords"
+    content="Word to PDF, DOCX to PDF, Word PDF converter, convert Word to PDF online, DOCX converter, free PDF converter"
+  >
 
-  <link rel="canonical"
-        href="https://zainabfuzail04-coder.github.io/paperdesk-site/word-to-pdf.html">
+  <link
+    rel="canonical"
+    href="https://paperdesktool.com/word-to-pdf.html"
+  >
 
-  <meta property="og:title"
-        content="Word to PDF Converter Online Free — PaperDesk">
+  <meta
+    property="og:title"
+    content="Word to PDF Converter – Convert DOCX to PDF | PaperDesk"
+  >
 
-  <meta property="og:description"
-        content="Convert Word DOCX documents to PDF directly in your browser with PaperDesk.">
+  <meta
+    property="og:description"
+    content="Convert Word DOCX files to PDF online directly in your browser with PaperDesk."
+  >
 
   <meta property="og:type" content="website">
 
-  <meta property="og:url"
-        content="https://zainabfuzail04-coder.github.io/paperdesk-site/word-to-pdf.html">
+  <meta
+    property="og:url"
+    content="https://paperdesktool.com/word-to-pdf.html"
+  >
 
   <link rel="stylesheet" href="style.css">
-
-  <style>
-    .status {
-      margin-top: 18px;
-      color: #697386;
-      text-align: center;
-      font-size: 14px;
-    }
-
-    .pdf-render-area {
-      position: fixed;
-      left: -100000px;
-      top: 0;
-      width: 794px;
-      background: #ffffff;
-      color: #000000;
-      z-index: -1;
-      overflow: visible;
-    }
-
-    .pdf-content {
-      width: 794px;
-      box-sizing: border-box;
-      padding: 40px;
-      background: #ffffff;
-      color: #000000;
-      font-family: Arial, sans-serif;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    .pdf-content img {
-      max-width: 100%;
-      height: auto;
-    }
-
-    .pdf-content table {
-      max-width: 100%;
-      border-collapse: collapse;
-    }
-  </style>
 </head>
 
 <body>
 
-  <!-- HEADER -->
-  <header class="site-header">
-    <nav class="navbar">
+  <header>
+    <div class="container">
+      <a href="index.html" class="logo">PaperDesk.</a>
 
-      <a href="index.html" class="logo">
-        Paper<span>Desk</span>.
-      </a>
-
-      <div class="nav-links">
+      <nav>
         <a href="index.html">Home</a>
         <a href="index.html#tools">Tools</a>
-        <a href="index.html#privacy">Privacy</a>
-      </div>
-
-    </nav>
+        <a href="privacy.html">Privacy</a>
+      </nav>
+    </div>
   </header>
 
+  <main>
 
-  <!-- TOOL -->
-  <main class="tool-page">
+    <section class="tool-page">
 
-    <div class="tool-header">
+      <div class="container">
 
-      <div class="hero-badge">
-        📝 Document Converter
+        <div class="page-intro">
+
+          <div class="badge">
+            📝 Document Converter
+          </div>
+
+          <h1>Word to PDF Converter</h1>
+
+          <p>
+            Convert Word DOCX files to PDF online directly in your browser.
+          </p>
+
+        </div>
+
+        <div class="tool-card">
+
+          <div class="upload-area" id="uploadArea">
+
+            <div class="upload-icon">
+              📄
+            </div>
+
+            <h2>Upload your Word document</h2>
+
+            <p>
+              Select a DOCX file to convert it into a PDF.
+            </p>
+
+            <input
+              type="file"
+              id="fileInput"
+              accept=".docx"
+              hidden
+            >
+
+            <button
+              type="button"
+              class="button"
+              id="chooseFileBtn"
+            >
+              Choose DOCX File
+            </button>
+
+            <p id="fileName" class="file-name"></p>
+
+          </div>
+
+          <button
+            type="button"
+            class="button convert-button"
+            id="convertBtn"
+            disabled
+          >
+            Convert to PDF
+          </button>
+
+          <p id="status" class="status"></p>
+
+          <div class="privacy-note">
+            🔒 Your document is processed directly in your browser.
+          </div>
+
+        </div>
+
+        <section class="tool-info">
+
+          <h2>Word to PDF Converter Online</h2>
+
+          <p>
+            PaperDesk lets you convert Word DOCX documents to PDF online
+            directly in your browser. Select your Word file, convert it,
+            and download your PDF without uploading your document to a
+            server.
+          </p>
+
+          <h2>How to convert Word to PDF</h2>
+
+          <ol>
+            <li>Choose your DOCX Word document.</li>
+            <li>Click the “Convert to PDF” button.</li>
+            <li>Download your converted PDF file.</li>
+          </ol>
+
+          <h2>Private Word to PDF conversion</h2>
+
+          <p>
+            The conversion is performed in your browser, so your document
+            does not need to be uploaded to a remote server.
+          </p>
+
+        </section>
+
       </div>
 
-      <h1>Word to PDF</h1>
-
-      <p>
-        Convert a Word DOCX document into a PDF directly in your browser.
-      </p>
-
-    </div>
-
-
-    <!-- UPLOAD -->
-    <div class="upload-box">
-
-      <div class="upload-icon">📄</div>
-
-      <h3>Select your Word document</h3>
-
-      <p>
-        Supported format: DOCX
-      </p>
-
-      <label for="wordInput" class="btn btn-primary">
-        Choose Word File
-      </label>
-
-      <input
-        type="file"
-        id="wordInput"
-        class="file-input"
-        accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-      >
-
-    </div>
-
-
-    <!-- FILE -->
-    <div id="fileList" class="file-list"></div>
-
-
-    <!-- ACTION -->
-    <div class="action-area">
-
-      <button
-        id="convertBtn"
-        class="btn btn-primary"
-        type="button"
-        disabled
-      >
-        Convert to PDF
-      </button>
-
-    </div>
-
-    <div id="status" class="status"></div>
-
-
-    <div class="privacy-note">
-      🔒 Your document is processed directly in your browser.
-    </div>
+    </section>
 
   </main>
 
+  <footer>
+    <div class="container">
+      <p>© 2026 PaperDesk. All rights reserved.</p>
 
-  <!-- FOOTER -->
-  <footer class="site-footer">
-
-    <div class="footer-inner">
-
-      <div class="footer-brand">
-
-        <h3>PaperDesk.</h3>
-
-        <p>
-          Simple PDF tools for everyday document work.
-        </p>
-
+      <div>
+        <a href="about.html">About</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
       </div>
-
-      <div class="footer-links">
-
-        <a href="index.html">Home</a>
-        <a href="index.html#tools">Tools</a>
-        <a href="index.html#privacy">Privacy</a>
-
-      </div>
-
     </div>
-
-    <div class="footer-bottom">
-      © 2026 PaperDesk. All rights reserved.
-    </div>
-
   </footer>
 
 
-  <!-- MAMMOTH -->
+  <!-- DOCX conversion library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js"></script>
 
-  <!-- HTML2PDF -->
+  <!-- PDF generation library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 
   <script>
-
-    const wordInput = document.getElementById("wordInput");
-    const fileList = document.getElementById("fileList");
+    const fileInput = document.getElementById("fileInput");
+    const chooseFileBtn = document.getElementById("chooseFileBtn");
     const convertBtn = document.getElementById("convertBtn");
+    const fileName = document.getElementById("fileName");
     const status = document.getElementById("status");
 
     let selectedFile = null;
 
-
-    /* SELECT WORD FILE */
-    wordInput.addEventListener("change", function () {
-
-      selectedFile = this.files[0];
-
-      fileList.innerHTML = "";
-      status.textContent = "";
-
-      if (!selectedFile) {
-        convertBtn.disabled = true;
-        return;
-      }
-
-      const item = document.createElement("div");
-
-      item.className = "file-item";
-
-      item.innerHTML = `
-        <span>📄 ${selectedFile.name}</span>
-        <span>${(selectedFile.size / 1024).toFixed(1)} KB</span>
-      `;
-
-      fileList.appendChild(item);
-
-      convertBtn.disabled = false;
-
+    chooseFileBtn.addEventListener("click", () => {
+      fileInput.click();
     });
 
+    fileInput.addEventListener("change", (event) => {
+      const file = event.target.files[0];
 
-    /* CONVERT TO PDF */
-    convertBtn.addEventListener("click", async function () {
-
-      if (!selectedFile) {
-        alert("Please select a Word file first.");
+      if (!file) {
+        selectedFile = null;
+        convertBtn.disabled = true;
+        fileName.textContent = "";
         return;
       }
 
-      convertBtn.disabled = true;
-      convertBtn.textContent = "Converting...";
-      status.textContent = "Reading Word document...";
+      if (!file.name.toLowerCase().endsWith(".docx")) {
+        selectedFile = null;
+        convertBtn.disabled = true;
+        fileName.textContent = "";
+        status.textContent = "Please select a DOCX Word document.";
+        return;
+      }
 
+      selectedFile = file;
+      fileName.textContent = `Selected: ${file.name}`;
+      status.textContent = "";
+      convertBtn.disabled = false;
+    });
 
-      let renderArea = null;
-
+    convertBtn.addEventListener("click", async () => {
+      if (!selectedFile) {
+        status.textContent = "Please select a DOCX file first.";
+        return;
+      }
 
       try {
+        convertBtn.disabled = true;
+        chooseFileBtn.disabled = true;
+        status.textContent = "Converting your Word document...";
 
-        /* READ DOCX */
         const arrayBuffer = await selectedFile.arrayBuffer();
 
-
-        /* CONVERT DOCX TO HTML */
         const result = await mammoth.convertToHtml({
           arrayBuffer: arrayBuffer
         });
 
+        const htmlContent = result.value;
 
-        if (!result.value || result.value.trim() === "") {
-          throw new Error("Word document contains no readable content.");
-        }
+        const pdfContainer = document.createElement("div");
 
+        pdfContainer.style.background = "#ffffff";
+        pdfContainer.style.color = "#000000";
+        pdfContainer.style.padding = "40px";
+        pdfContainer.style.width = "794px";
+        pdfContainer.style.boxSizing = "border-box";
+        pdfContainer.style.fontFamily = "Arial, sans-serif";
+        pdfContainer.style.fontSize = "14px";
+        pdfContainer.style.lineHeight = "1.6";
 
-        status.textContent = "Preparing document...";
+        pdfContainer.innerHTML = htmlContent;
 
+        document.body.appendChild(pdfContainer);
 
-        /* CREATE PDF RENDER AREA */
-        renderArea = document.createElement("div");
+        const options = {
+          margin: 0,
+          filename: selectedFile.name.replace(/\.docx$/i, "") + ".pdf",
+          image: {
+            type: "jpeg",
+            quality: 0.98
+          },
+          html2canvas: {
+            scale: 2,
+            useCORS: true
+          },
+          jsPDF: {
+            unit: "pt",
+            format: "a4",
+            orientation: "portrait"
+          }
+        };
 
-        renderArea.className = "pdf-render-area";
-
-
-        const content = document.createElement("div");
-
-        content.className = "pdf-content";
-
-        content.innerHTML = result.value;
-
-
-        renderArea.appendChild(content);
-
-        document.body.appendChild(renderArea);
-
-
-        /* WAIT FOR BROWSER TO RENDER */
-        await new Promise(resolve => {
-          requestAnimationFrame(() => {
-            requestAnimationFrame(resolve);
-          });
-        });
-
-
-        status.textContent = "Creating PDF...";
-
-
-        /* CREATE PDF */
         await html2pdf()
-          .set({
-
-            margin: [10, 10, 10, 10],
-
-            filename: "paperdesk-word-to-pdf.pdf",
-
-            image: {
-              type: "jpeg",
-              quality: 0.95
-            },
-
-            html2canvas: {
-
-              scale: 2,
-
-              backgroundColor: "#ffffff",
-
-              useCORS: true,
-
-              allowTaint: true,
-
-              logging: false,
-
-              letterRendering: true
-
-            },
-
-            jsPDF: {
-
-              unit: "mm",
-
-              format: "a4",
-
-              orientation: "portrait",
-
-              compress: true
-
-            },
-
-            pagebreak: {
-
-              mode: [
-                "css",
-                "legacy"
-              ]
-
-            }
-
-          })
-          .from(content)
+          .set(options)
+          .from(pdfContainer)
           .save();
 
+        pdfContainer.remove();
 
-        status.textContent =
-          "✅ PDF created successfully!";
-
+        status.textContent = "Your PDF has been created successfully.";
 
       } catch (error) {
 
-        console.error(
-          "Word to PDF Error:",
-          error
-        );
+        console.error(error);
 
-        status.textContent = "";
-
-        alert(
-          "Could not convert this Word file. Please try again."
-        );
-
+        status.textContent =
+          "Something went wrong while converting the document.";
 
       } finally {
 
-        /* REMOVE TEMPORARY CONTENT */
-
-        if (renderArea) {
-          renderArea.remove();
-        }
-
-
         convertBtn.disabled = false;
-
-        convertBtn.textContent =
-          "Convert to PDF";
+        chooseFileBtn.disabled = false;
 
       }
-
     });
-
   </script>
 
 </body>
