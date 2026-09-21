@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://zainabfuzail04-coder.github.io/paperdesk-site/sitemap.xml
+Sitemap: https://paperdesktool.com/sitemap.xml
