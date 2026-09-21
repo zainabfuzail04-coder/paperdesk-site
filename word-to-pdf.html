@@ -175,12 +175,14 @@
 
 
   <!-- DOCX conversion library -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js"></script>
+  <!-- DOCX conversion library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<!-- HTML rendering engine -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
+<!-- PDF generation library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 
   <script>
     const fileInput = document.getElementById("fileInput");
@@ -242,14 +244,13 @@ if (!htmlContent || !htmlContent.trim()) {
   throw new Error("The Word document content could not be read.");
 }
 
-/* Create document for PDF rendering */
+/* Create hidden rendering container */
 const pdfContainer = document.createElement("div");
 
 pdfContainer.style.position = "absolute";
-pdfContainer.style.left = "0";
+pdfContainer.style.left = "-10000px";
 pdfContainer.style.top = "0";
 pdfContainer.style.width = "794px";
-pdfContainer.style.minHeight = "1123px";
 pdfContainer.style.padding = "40px";
 pdfContainer.style.boxSizing = "border-box";
 pdfContainer.style.backgroundColor = "#ffffff";
@@ -257,55 +258,98 @@ pdfContainer.style.color = "#000000";
 pdfContainer.style.fontFamily = "Arial, sans-serif";
 pdfContainer.style.fontSize = "14px";
 pdfContainer.style.lineHeight = "1.6";
-pdfContainer.style.zIndex = "99999";
 
 pdfContainer.innerHTML = htmlContent;
 
 document.body.appendChild(pdfContainer);
 
-/* Wait for the document to render */
+/* Give browser time to render the Word content */
 await new Promise(resolve => {
   requestAnimationFrame(() => {
     requestAnimationFrame(resolve);
   });
 });
 
-/* Create PDF using jsPDF */
+/* Check PDF engine */
 if (!window.jspdf || !window.jspdf.jsPDF) {
   throw new Error("PDF engine could not be loaded.");
 }
 
+if (typeof window.html2canvas !== "function") {
+  throw new Error("HTML rendering engine could not be loaded.");
+}
+
 const { jsPDF } = window.jspdf;
 
+/* Create PDF */
 const pdf = new jsPDF({
   orientation: "portrait",
   unit: "mm",
   format: "a4"
 });
 
-/* Convert the Word content to PDF */
-await pdf.html(pdfContainer, {
-  x: 10,
-  y: 10,
-  width: 190,
-  windowWidth: 794,
-  autoPaging: "text",
-  margin: [10, 10, 10, 10],
-
-  html2canvas: {
-    scale: 1,
-    useCORS: true,
-    backgroundColor: "#ffffff",
-    scrollX: 0,
-    scrollY: 0
-  }
+/* Render Word content into canvas */
+const canvas = await html2canvas(pdfContainer, {
+  scale: 1.5,
+  useCORS: true,
+  backgroundColor: "#ffffff",
+  scrollX: 0,
+  scrollY: 0,
+  width: pdfContainer.scrollWidth,
+  height: pdfContainer.scrollHeight
 });
 
-/* Download the PDF */
+const imgData = canvas.toDataURL("image/jpeg", 0.95);
+
+const pageWidth = 210;
+const pageHeight = 297;
+
+const margin = 10;
+
+const usableWidth = pageWidth - (margin * 2);
+const usableHeight = pageHeight - (margin * 2);
+
+const imageWidth = usableWidth;
+const imageHeight = (canvas.height * imageWidth) / canvas.width;
+
+let heightLeft = imageHeight;
+let position = margin;
+
+pdf.addImage(
+  imgData,
+  "JPEG",
+  margin,
+  position,
+  imageWidth,
+  imageHeight
+);
+
+heightLeft -= usableHeight;
+
+while (heightLeft > 0) {
+
+  position = margin - (imageHeight - heightLeft);
+
+  pdf.addPage();
+
+  pdf.addImage(
+    imgData,
+    "JPEG",
+    margin,
+    position,
+    imageWidth,
+    imageHeight
+  );
+
+  heightLeft -= usableHeight;
+}
+
+/* Download PDF */
 pdf.save(
   selectedFile.name.replace(/\.docx$/i, "") + ".pdf"
 );
 
+/* Remove temporary rendering container */
 pdfContainer.remove();
 
 status.textContent = "Your PDF has been created successfully.";
