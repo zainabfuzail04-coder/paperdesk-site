@@ -443,6 +443,20 @@ compressBtn.addEventListener("click", async function () {
     status.textContent = "Creating compressed PDF...";
 
     const pdfBlob = outputPdf.output("blob");
+    const originalSize = selectedFile.size;
+    const compressedSize = pdfBlob.size;
+
+    const sizeChange = originalSize > 0
+    ? ((originalSize - compressedSize) / originalSize) * 100
+    : 0;
+
+   if (compressedSize >= originalSize) {
+   status.textContent =
+    "The PDF could not be reduced in size. The output may be larger than the original.";
+   } else {
+   status.textContent =
+    `PDF size reduced by ${sizeChange.toFixed(1)}%.`;
+   }
 
     const url = URL.createObjectURL(pdfBlob);
 
@@ -461,8 +475,7 @@ compressBtn.addEventListener("click", async function () {
       URL.revokeObjectURL(url);
     }, 2000);
 
-    status.textContent =
-      "✅ PDF compressed successfully!";
+    status.textContent += " Download started.";
 
   } catch (error) {
 
