@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://paperdesktool.com/sitemap.xml
+Sitemap: https://www.paperdesktool.com/sitemap.xml
