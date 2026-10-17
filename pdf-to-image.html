@@ -1,14 +1,536 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://www.paperdesktool.com/</loc></url>
-  <url><loc>https://www.paperdesktool.com/merge-pdf.html</loc></url>
-  <url><loc>https://www.paperdesktool.com/word-to-pdf.html</loc></url>
-  <url><loc>https://www.paperdesktool.com/image-to-pdf.html</loc></url>
-  <url><loc>https://www.paperdesktool.com/pdf-to-image.html</loc></url>
-  <url><loc>https://www.paperdesktool.com/split-pdf.html</loc></url>
-  <url><loc>https://www.paperdesktool.com/compress-pdf.html</loc></url>
-  <url><loc>https://www.paperdesktool.com/privacy.html</loc></url>
-  <url><loc>https://www.paperdesktool.com/terms.html</loc></url>
-  <url><loc>https://www.paperdesktool.com/about.html</loc></url>
-  <url><loc>https://www.paperdesktool.com/contact.html</loc></url>
-</urlset>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>PDF to Image Converter Online — PDF to PNG | PaperDesk</title>
+
+  <meta name="description"
+        content="Convert PDF pages to PNG images online with PaperDesk. Turn PDF pages into images directly in your browser with a simple and private PDF to image converter.">
+
+  <meta name="robots" content="index, follow">
+
+  <link rel="canonical" href="https://paperdesktool.com/pdf-to-image.html">
+
+  <meta property="og:title" content="PDF to Image Converter Online — PDF to PNG | PaperDesk">
+  <meta property="og:description" content="Convert PDF pages into PNG images directly in your browser with PaperDesk.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://paperdesktool.com/pdf-to-image.html">
+  <meta property="og:site_name" content="PaperDesk">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "PaperDesk PDF to Image",
+    "url": "https://paperdesktool.com/pdf-to-image.html",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Any",
+    "description": "Convert PDF pages into PNG images directly in your browser."
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I convert a PDF to images?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Choose your PDF, click Convert to Images, and then download each page as a PNG image using the buttons that appear."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which image format do I get?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Each page is created as a PNG image."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Are my files uploaded to a server?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. The pages are converted inside your browser, so your PDF stays on your device."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .status {
+      margin-top: 18px;
+      text-align: center;
+      color: #697386;
+      font-size: 14px;
+    }
+
+    .result-list {
+      margin-top: 20px;
+    }
+
+    .result-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      padding: 14px;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      background: #fff;
+    }
+
+    .mini-btn {
+      padding: 8px 14px;
+      border: 0;
+      border-radius: 8px;
+      background: #e53935;
+      color: white;
+      cursor: pointer;
+    }
+
+    .tool-info {
+      max-width: 800px;
+      margin: 50px auto 0;
+      padding: 0 20px;
+      line-height: 1.75;
+      color: #3c4257;
+    }
+    .tool-info h2 { margin: 32px 0 12px; }
+    .tool-info ol, .tool-info ul { padding-left: 22px; }
+    .tool-info li { margin-bottom: 8px; }
+    .tool-info a { color: inherit; text-decoration: underline; }
+  </style>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-TLH5QYXFN6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-TLH5QYXFN6');
+  </script>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2545323317831738"
+      crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+  <header class="site-header">
+    <nav class="navbar">
+
+      <a href="index.html" class="logo">
+        Paper<span>Desk</span>.
+      </a>
+
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="index.html#tools">Tools</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="guides.html">Guides</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </div>
+
+    </nav>
+  </header>
+
+
+  <main class="tool-page">
+
+    <div class="tool-header">
+
+      <div class="hero-badge">
+        🖼️ PDF Converter
+      </div>
+
+      <h1>PDF to Image</h1>
+
+      <p>
+        Convert PDF pages into high-quality PNG images directly in your browser.
+      </p>
+
+    </div>
+
+
+    <div class="upload-box">
+
+      <div class="upload-icon">📤</div>
+
+      <h3>Select your PDF</h3>
+
+      <p>
+        Choose a PDF file to convert its pages into images.
+      </p>
+
+      <label for="pdfInput" class="btn btn-primary">
+        Choose PDF File
+      </label>
+
+      <input
+        type="file"
+        id="pdfInput"
+        class="file-input"
+        accept="application/pdf"
+      >
+
+    </div>
+
+
+    <div id="fileList" class="file-list"></div>
+
+
+    <div class="action-area">
+
+      <button
+        id="convertBtn"
+        class="btn btn-primary"
+        type="button"
+        disabled
+      >
+        Convert to Images
+      </button>
+
+    </div>
+
+
+    <div id="status" class="status"></div>
+
+    <div id="resultList" class="result-list"></div>
+
+
+    <div class="privacy-note">
+      🔒 Your PDF is processed directly in your browser.
+    </div>
+
+
+    <section class="tool-info">
+
+      <h2>PDF to Image Converter Online for Free</h2>
+
+      <p>
+        PaperDesk PDF to Image Converter turns every page of a PDF into a
+        PNG picture. You do not need to install any software or create an
+        account. Choose your PDF, click convert and download the pages you
+        need as images.
+      </p>
+
+      <h2>How to Convert PDF to Image</h2>
+
+      <ol>
+        <li>Click “Choose PDF File” and select your PDF.</li>
+        <li>Click “Convert to Images” and wait while the pages are processed.</li>
+        <li>A list of pages will appear below the button.</li>
+        <li>Click “Download PNG” next to each page you want to save.</li>
+      </ol>
+
+      <h2>When Is PDF to Image Useful?</h2>
+
+      <ul>
+        <li><strong>Sharing on chat apps and social media:</strong> a picture of a page is easier to post than a PDF.</li>
+        <li><strong>Presentations:</strong> place a page of a document on a slide as an image.</li>
+        <li><strong>Websites and blogs:</strong> show a page of a document as a picture on a web page.</li>
+        <li><strong>Quick preview:</strong> save one important page as an image instead of sending the whole file.</li>
+      </ul>
+
+      <h2>About the Image Quality</h2>
+
+      <p>
+        Every page is created as a PNG image at a high resolution, so text
+        and pictures stay clear. PNG keeps sharp edges well, which is
+        good for documents. Because of the high quality, the image files can
+        be fairly large, especially for pages full of photos.
+      </p>
+
+      <h2>Your Files Stay on Your Device</h2>
+
+      <p>
+        PaperDesk does not upload your PDF to a remote server. Your own
+        browser converts the pages, which is helpful when your document
+        contains personal or work information. You can read more in our
+        <a href="privacy.html">Privacy Policy</a>.
+      </p>
+
+      <h2>Tips for Better Results</h2>
+
+      <ul>
+        <li>Download only the pages you need. This keeps your downloads folder tidy.</li>
+        <li>Password-protected PDFs cannot be converted. Remove the password first.</li>
+        <li>PDFs with many pages take longer, because your device does the work. Close other heavy tabs if the page feels slow.</li>
+        <li>Only need a few pages? Use <a href="split-pdf.html">Split PDF</a> first and convert the smaller file.</li>
+        <li>Want the images back as a PDF? Use <a href="image-to-pdf.html">Image to PDF</a>.</li>
+      </ul>
+
+      <h2>Frequently Asked Questions</h2>
+
+      <h3>Is PaperDesk PDF to Image free?</h3>
+      <p>
+        Yes. You can convert PDF pages to images without paying and without creating an account.
+      </p>
+
+      <h3>Which image format do I get?</h3>
+      <p>
+        Each page is created as a PNG image.
+      </p>
+
+      <h3>Are my files uploaded to a server?</h3>
+      <p>
+        No. The pages are converted inside your browser, so your PDF stays on your device.
+      </p>
+
+      <h3>Do I get one image per page?</h3>
+      <p>
+        Yes. Every page of your PDF becomes its own PNG image, and you can
+        download each one separately. The files are named paperdesk-page-1.png,
+        paperdesk-page-2.png and so on.
+      </p>
+
+      <h3>Why can't I convert my PDF?</h3>
+      <p>
+        The file may be damaged or password-protected. Try opening it in a
+        PDF viewer first, or try another file.
+      </p>
+
+      <h2>More PDF Tools</h2>
+
+      <p>
+        Looking for something else? Try
+        <a href="merge-pdf.html">Merge PDF</a>,
+        <a href="split-pdf.html">Split PDF</a>,
+        <a href="compress-pdf.html">Compress PDF</a>,
+        <a href="word-to-pdf.html">Word to PDF</a> or
+        <a href="image-to-pdf.html">Image to PDF</a>.
+      </p>
+
+    </section>
+
+  </main>
+
+
+  <footer class="site-footer">
+
+    <div class="footer-inner">
+
+      <div class="footer-brand">
+
+        <h3>PaperDesk.</h3>
+
+        <p>
+          Simple PDF tools for everyday document work.
+        </p>
+
+      </div>
+
+      <div class="footer-links">
+
+        <a href="index.html">Home</a>
+        <a href="index.html#tools">Tools</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Use</a>
+        <a href="guides.html">Guides</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact Us</a>
+
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      © 2026 PaperDesk. All rights reserved.
+    </div>
+
+  </footer>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+
+  <script>
+
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+
+    const pdfInput = document.getElementById("pdfInput");
+    const fileList = document.getElementById("fileList");
+    const convertBtn = document.getElementById("convertBtn");
+    const status = document.getElementById("status");
+    const resultList = document.getElementById("resultList");
+
+    let selectedFile = null;
+
+
+    pdfInput.addEventListener("change", function () {
+
+      selectedFile = this.files[0];
+
+      fileList.innerHTML = "";
+      resultList.innerHTML = "";
+      status.textContent = "";
+
+      if (!selectedFile) {
+
+        convertBtn.disabled = true;
+        return;
+
+      }
+
+
+      const item = document.createElement("div");
+
+      item.className = "file-item";
+
+      item.innerHTML = `
+        <span>📄 ${selectedFile.name}</span>
+        <span>${(selectedFile.size / 1024).toFixed(1)} KB</span>
+      `;
+
+      fileList.appendChild(item);
+
+      convertBtn.disabled = false;
+
+    });
+
+
+    convertBtn.addEventListener("click", async function () {
+
+      if (!selectedFile) {
+
+        alert("Please select a PDF file first.");
+        return;
+
+      }
+
+
+      convertBtn.disabled = true;
+      convertBtn.textContent = "Converting...";
+      resultList.innerHTML = "";
+      status.textContent = "Reading PDF...";
+
+
+      try {
+
+        const arrayBuffer = await selectedFile.arrayBuffer();
+
+        const pdf = await pdfjsLib.getDocument({
+          data: arrayBuffer
+        }).promise;
+
+
+        for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
+
+          status.textContent = "Converting PDF pages...";
+
+
+          const page = await pdf.getPage(pageNumber);
+
+          const viewport = page.getViewport({
+            scale: 2
+          });
+
+
+          const canvas = document.createElement("canvas");
+
+          const context = canvas.getContext("2d");
+
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+
+
+          await page.render({
+            canvasContext: context,
+            viewport: viewport
+          }).promise;
+
+
+          const blob = await new Promise(resolve => {
+
+            canvas.toBlob(
+              resolve,
+              "image/png"
+            );
+
+          });
+
+
+          const url = URL.createObjectURL(blob);
+
+
+          const resultItem = document.createElement("div");
+
+          resultItem.className = "result-item";
+
+          resultItem.innerHTML = `
+            <span>🖼️ Page ${pageNumber}</span>
+
+            <button class="mini-btn">
+              Download PNG
+            </button>
+          `;
+
+
+          const downloadButton =
+            resultItem.querySelector("button");
+
+
+          downloadButton.addEventListener("click", function () {
+
+            const link = document.createElement("a");
+
+            link.href = url;
+
+            link.download = "paperdesk-page-" + pageNumber + ".png";
+
+
+            document.body.appendChild(link);
+
+            link.click();
+
+            link.remove();
+
+          });
+
+
+          resultList.appendChild(resultItem);
+
+        }
+
+
+        status.textContent = "PDF converted successfully!";
+
+
+
+      } catch (error) {
+
+        console.error(error);
+
+        alert(
+          "Could not convert this PDF. Please try another file."
+        );
+
+        status.textContent = "";
+
+      }
+
+
+      convertBtn.disabled = false;
+      convertBtn.textContent = "Convert to Images";
+
+    });
+
+  </script>
+
+</body>
+</html>
