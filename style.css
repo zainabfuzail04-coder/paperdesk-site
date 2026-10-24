@@ -431,16 +431,20 @@ font-size: 13px;
 /* ================= MOBILE ================= */
 
 @media (max-width: 800px) {
+.navbar {
+flex-wrap: wrap;
+min-height: auto;
+padding-top: 10px;
+padding-bottom: 10px;
+}
+
 .nav-links {
-gap: 12px;
+flex-wrap: wrap;
+gap: 6px 14px;
 }
 
-.nav-links a:not(.nav-button) {
-display: none;
-}
-
-.hero {
-padding-top: 65px;
+.nav-links a {
+font-size: 13px;
 }
 
 .tools-grid {
@@ -646,4 +650,10 @@ flex-wrap: wrap;
 footer a {
 color: #d7dbe4;
 margin-left: 20px;
+}
+
+@media (max-width: 480px) {
+.navbar {
+padding: 8px 16px;
+}
 }
