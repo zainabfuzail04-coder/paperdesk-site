@@ -4,30 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Compress PDF Online Free — Reduce PDF File Size | PaperDesk</title>
+  <title>Split PDF Online Free — Extract PDF Pages | PaperDesk</title>
 
   <meta name="description"
-        content="Compress PDF files online with PaperDesk. Reduce PDF file size for easier sharing and storage directly in your browser with a simple and private PDF compressor.">
+        content="Split PDF files online with PaperDesk. Extract selected pages or page ranges and create a new PDF directly in your browser with a simple and private PDF splitter.">
 
   <meta name="robots" content="index, follow">
 
-  <link rel="canonical" href="https://paperdesktool.com/compress-pdf.html">
+  <link rel="canonical" href="https://paperdesktool.com/split-pdf.html">
 
-  <meta property="og:title" content="Compress PDF Online Free — Reduce PDF File Size | PaperDesk">
-  <meta property="og:description" content="Reduce PDF file size directly in your browser with PaperDesk's simple PDF compressor.">
+  <meta property="og:title" content="Split PDF Online Free — Extract PDF Pages | PaperDesk">
+  <meta property="og:description" content="Extract selected pages or page ranges from a PDF and create a new PDF directly in your browser with PaperDesk.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://paperdesktool.com/compress-pdf.html">
+  <meta property="og:url" content="https://paperdesktool.com/split-pdf.html">
   <meta property="og:site_name" content="PaperDesk">
 
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "PaperDesk Compress PDF",
-    "url": "https://paperdesktool.com/compress-pdf.html",
+    "name": "PaperDesk Split PDF",
+    "url": "https://paperdesktool.com/split-pdf.html",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Any",
-    "description": "Reduce PDF file size directly in your browser with adjustable compression levels."
+    "description": "Extract selected pages or page ranges from a PDF and create a new PDF directly in your browser."
   }
   </script>
 
@@ -38,18 +38,10 @@
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "How does PaperDesk compress a PDF?",
+        "name": "How do I extract pages from a PDF?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Each page is turned into a compressed JPEG image and placed into a new PDF. A higher compression level gives a smaller file with lower image quality."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Will I still be able to select text after compressing?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No. Because pages are converted to images, the text in the compressed PDF cannot be selected or searched. Keep your original file if you need searchable text."
+          "text": "Choose your PDF, type the page numbers or ranges you want, for example 1, 3, 5-7, and click Split PDF. A new PDF with only those pages will be downloaded."
         }
       },
       {
@@ -57,7 +49,15 @@
         "name": "Are my files uploaded to a server?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "No. Compression happens inside your browser, so your PDF stays on your device."
+          "text": "No. The pages are extracted inside your browser, so your PDF stays on your device."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is PaperDesk Split PDF free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. You can split PDF files without paying and without creating an account."
         }
       }
     ]
@@ -67,32 +67,29 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
+    .page-input {
+      width: 100%;
+      max-width: 600px;
+      padding: 14px 16px;
+      margin-top: 15px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 15px;
+      box-sizing: border-box;
+      outline: none;
+    }
+
+    .page-help {
+      margin-top: 8px;
+      color: #697386;
+      font-size: 13px;
+    }
+
     .status {
       margin-top: 18px;
       text-align: center;
       color: #697386;
       font-size: 14px;
-    }
-
-    .quality-box {
-      margin-top: 20px;
-    }
-
-    .quality-select {
-      width: 100%;
-      max-width: 600px;
-      padding: 14px 16px;
-      margin-top: 12px;
-      border: 1px solid #e5e7eb;
-      border-radius: 10px;
-      font-size: 15px;
-      background: white;
-    }
-
-    .info-text {
-      margin-top: 12px;
-      color: #697386;
-      font-size: 13px;
     }
 
     .tool-info {
@@ -121,10 +118,8 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2545323317831738"
       crossorigin="anonymous"></script>
 </head>
-
 <body>
 
-  <!-- HEADER -->
   <header class="site-header">
     <nav class="navbar">
 
@@ -145,25 +140,23 @@
   </header>
 
 
-  <!-- TOOL -->
   <main class="tool-page">
 
     <div class="tool-header">
 
       <div class="hero-badge">
-        📦 PDF Optimizer
+        ✂️ PDF Organizer
       </div>
 
-      <h1>Compress PDF</h1>
+      <h1>Split PDF</h1>
 
       <p>
-        Reduce the size of a PDF for easier sharing and storage.
+        Extract the pages you need from a PDF and create a new document.
       </p>
 
     </div>
 
 
-    <!-- UPLOAD -->
     <div class="upload-box">
 
       <div class="upload-icon">📄</div>
@@ -171,7 +164,7 @@
       <h3>Select your PDF</h3>
 
       <p>
-        Choose the PDF you want to compress.
+        Choose the PDF you want to split.
       </p>
 
       <label for="pdfInput" class="btn btn-primary">
@@ -188,48 +181,40 @@
     </div>
 
 
-    <!-- FILE -->
     <div id="fileList" class="file-list"></div>
 
 
-    <!-- QUALITY -->
-    <div class="upload-box quality-box">
+    <div class="upload-box" style="margin-top: 20px;">
 
-      <h3>Compression level</h3>
+      <h3>Select pages</h3>
 
-      <select id="qualitySelect" class="quality-select">
+      <p>
+        Enter page numbers or ranges.
+      </p>
 
-        <option value="0.75">
-          Recommended — Balanced
-        </option>
+      <input
+        type="text"
+        id="pageInput"
+        class="page-input"
+        placeholder="Example: 1, 3, 5-7"
+      >
 
-        <option value="0.55">
-          High Compression — Smaller File
-        </option>
-
-        <option value="0.90">
-          Low Compression — Better Quality
-        </option>
-
-      </select>
-
-      <div class="info-text">
-        Higher compression may reduce image quality.
+      <div class="page-help">
+        Example: <strong>1,3,5-7</strong> extracts pages 1, 3, 5, 6 and 7.
       </div>
 
     </div>
 
 
-    <!-- ACTION -->
     <div class="action-area">
 
       <button
-        id="compressBtn"
+        id="splitBtn"
         class="btn btn-primary"
         type="button"
         disabled
       >
-        Compress PDF
+        Split PDF
       </button>
 
     </div>
@@ -245,97 +230,109 @@
 
     <section class="tool-info">
 
-      <h2>Compress PDF Online for Free</h2>
+      <h2>Split PDF Online for Free</h2>
 
       <p>
-        PaperDesk Compress PDF helps you make a PDF smaller so it is easier
-        to email, upload to a website or keep on your phone. You do not need
-        to install any software or create an account. Choose your file, pick
-        a compression level and download the smaller version.
+        PaperDesk Split PDF lets you pull out only the pages you need from
+        a larger PDF and save them as a new file. You do not need to install
+        any software or create an account. Choose your PDF, type the pages
+        you want, and download the result in a few seconds.
       </p>
 
-      <h2>How to Compress a PDF</h2>
+      <h2>How to Split a PDF</h2>
 
       <ol>
-        <li>Click “Choose PDF File” and select the PDF you want to compress.</li>
-        <li>Pick a compression level from the list.</li>
-        <li>Click “Compress PDF” and wait while each page is processed. Longer PDFs take more time.</li>
-        <li>Your browser will download a file named <strong>paperdesk-compressed.pdf</strong>.</li>
-        <li>Check the message under the button. It tells you how much smaller the file became.</li>
+        <li>Click “Choose PDF File” and select the PDF you want to split.</li>
+        <li>Type the pages you want in the box. Use commas for single pages and a dash for a range.</li>
+        <li>Click “Split PDF” and wait a moment while the new file is created.</li>
+        <li>Your browser will download a file named <strong>paperdesk-split.pdf</strong>.</li>
       </ol>
 
-      <h2>Which Compression Level Should I Choose?</h2>
+      <h2>How to Write Page Numbers</h2>
+
+      <p>
+        The page box accepts single pages and ranges in the same line.
+        Here are a few examples:
+      </p>
 
       <ul>
-        <li><strong>Recommended — Balanced:</strong> a good mix of smaller size and clear pages. Start here.</li>
-        <li><strong>High Compression — Smaller File:</strong> the smallest result, but pages can look softer. Useful when you must stay under an upload limit.</li>
-        <li><strong>Low Compression — Better Quality:</strong> keeps pages sharper, but the file becomes less small.</li>
+        <li><strong>3</strong> extracts only page 3.</li>
+        <li><strong>2-5</strong> extracts pages 2, 3, 4 and 5.</li>
+        <li><strong>1, 4, 8</strong> extracts pages 1, 4 and 8.</li>
+        <li><strong>1, 3, 5-7</strong> extracts pages 1, 3, 5, 6 and 7.</li>
       </ul>
 
-      <h2>How This Compressor Works</h2>
-
       <p>
-        PaperDesk turns each page of your PDF into a compressed image and
-        builds a new PDF from those images. This works very well for scanned
-        documents, photos and PDFs full of pictures, which are often large.
+        The pages in your new PDF always appear in normal page order, even
+        if you type them in a different order.
       </p>
 
-      <p>
-        Because the pages become images, please keep in mind that
-        <strong>the text in the new PDF cannot be selected, copied or searched</strong>.
-        A PDF that is mostly plain text may also stay the same size or even
-        become larger. If that happens, the tool will tell you. Always keep
-        your original file as a backup.
-      </p>
+      <h2>When Is Splitting a PDF Useful?</h2>
+
+      <ul>
+        <li><strong>Students:</strong> send only the pages of a chapter or an assignment instead of a whole book.</li>
+        <li><strong>Offices:</strong> share one invoice or one page of a report without sending the full document.</li>
+        <li><strong>Applications:</strong> upload only the pages a form asks for, such as a single ID page.</li>
+        <li><strong>Email limits:</strong> make a smaller file when the full PDF is too big to attach.</li>
+      </ul>
 
       <h2>Your Files Stay on Your Device</h2>
 
       <p>
-        PaperDesk does not upload your PDF to a remote server to compress it.
-        Your own browser does the work, which is helpful when your document
-        contains personal or work information. You can read more in our
-        <a href="privacy.html">Privacy Policy</a>.
+        PaperDesk does not upload your PDF to a remote server to split it.
+        Your own browser reads the file and creates the new PDF, which is
+        useful when your document contains personal or work information.
+        You can read more in our <a href="privacy.html">Privacy Policy</a>.
       </p>
 
       <h2>Tips for Better Results</h2>
 
       <ul>
-        <li>Try the Recommended level first, then High Compression only if the file is still too large.</li>
-        <li>Use this tool for scans, photo-heavy files and image-based PDFs.</li>
-        <li>If you only need a few pages, use <a href="split-pdf.html">Split PDF</a> first. A shorter PDF is smaller anyway.</li>
-        <li>Need one file from many? Use <a href="merge-pdf.html">Merge PDF</a> and compress the result.</li>
-        <li>Very large PDFs can use a lot of memory. Close other heavy tabs if the page feels slow.</li>
+        <li>Check the total number of pages first. A page number higher than the total will show an error.</li>
+        <li>Password-protected PDFs cannot be split. Remove the password first, then try again.</li>
+        <li>Large PDFs can take longer, because your device does the work.</li>
+        <li>Want to join pages from different files afterwards? Use <a href="merge-pdf.html">Merge PDF</a>.</li>
+        <li>If the new file is still large, try <a href="compress-pdf.html">Compress PDF</a>.</li>
       </ul>
 
       <h2>Frequently Asked Questions</h2>
 
-      <h3>Is PaperDesk Compress PDF free?</h3>
+      <h3>Is PaperDesk Split PDF free?</h3>
       <p>
-        Yes. You can compress PDF files without paying and without creating an account.
+        Yes. You can split PDF files without paying and without creating an account.
       </p>
 
       <h3>Are my files uploaded to a server?</h3>
       <p>
-        No. Compression happens inside your browser, so your PDF stays on your device.
+        No. The pages are extracted inside your browser, so your PDF stays on your device.
       </p>
 
-      <h3>Why can't I select text in the compressed PDF?</h3>
+      <h3>Why do I get an “invalid page” error?</h3>
       <p>
-        The tool converts every page to an image to reduce the size. Images
-        do not contain selectable text. Keep your original PDF if you need
-        searchable or copyable text.
+        This happens when a page number is zero, higher than the total pages,
+        or not written correctly. Use only numbers, commas and dashes,
+        for example 1, 3, 5-7.
       </p>
 
-      <h3>Why did my file not get smaller?</h3>
+      <h3>Does splitting change the quality of my pages?</h3>
       <p>
-        PDFs that contain mostly text are already small, and turning them
-        into images can make them larger. Try the High Compression level,
-        or keep the original file.
+        No. The selected pages are copied into the new PDF as they are,
+        so text and images keep their original quality.
       </p>
 
-      <h3>Does compression change my original file?</h3>
+      <h3>Can I split a PDF into many separate files at once?</h3>
       <p>
-        No. Your original PDF is not changed. A new file is created and downloaded.
+        This tool creates one new PDF from the pages you choose. To make
+        several files, run the tool again with a different set of pages each time.
+      </p>
+
+      <h2>Related Guides</h2>
+
+      <p>
+        Read our guide on
+        <a href="extract-single-page-pdf.html">how to extract a single page from a large PDF</a>
+        or on
+        <a href="reduce-pdf-size.html">reducing PDF size for email and online forms</a>.
       </p>
 
       <h2>More PDF Tools</h2>
@@ -343,7 +340,7 @@
       <p>
         Looking for something else? Try
         <a href="merge-pdf.html">Merge PDF</a>,
-        <a href="split-pdf.html">Split PDF</a>,
+        <a href="compress-pdf.html">Compress PDF</a>,
         <a href="word-to-pdf.html">Word to PDF</a>,
         <a href="image-to-pdf.html">Image to PDF</a> or
         <a href="pdf-to-image.html">PDF to Image</a>.
@@ -354,7 +351,6 @@
   </main>
 
 
-  <!-- FOOTER -->
   <footer class="site-footer">
 
     <div class="footer-inner">
@@ -390,230 +386,225 @@
   </footer>
 
 
-  <!-- PDF.JS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-
-  <!-- JSPDF -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 
 
-<script>
+  <script>
 
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    const pdfInput = document.getElementById("pdfInput");
+    const pageInput = document.getElementById("pageInput");
+    const fileList = document.getElementById("fileList");
+    const splitBtn = document.getElementById("splitBtn");
+    const status = document.getElementById("status");
 
-const pdfInput = document.getElementById("pdfInput");
-const fileList = document.getElementById("fileList");
-const qualitySelect = document.getElementById("qualitySelect");
-const compressBtn = document.getElementById("compressBtn");
-const status = document.getElementById("status");
+    let selectedFile = null;
 
-let selectedFile = null;
 
-pdfInput.addEventListener("change", function () {
+    pdfInput.addEventListener("change", function () {
 
-  selectedFile = this.files[0];
+      selectedFile = this.files[0];
 
-  fileList.innerHTML = "";
-  status.textContent = "";
+      fileList.innerHTML = "";
+      status.textContent = "";
 
-  if (!selectedFile) {
-    compressBtn.disabled = true;
-    return;
-  }
+      if (!selectedFile) {
+        splitBtn.disabled = true;
+        return;
+      }
 
-  const item = document.createElement("div");
 
-  item.className = "file-item";
+      const item = document.createElement("div");
 
-  item.innerHTML = `
-    <span>📄 ${selectedFile.name}</span>
-    <span>${(selectedFile.size / 1024).toFixed(1)} KB</span>
-  `;
+      item.className = "file-item";
 
-  fileList.appendChild(item);
+      item.innerHTML = `
+        <span>📄 ${selectedFile.name}</span>
+        <span>${(selectedFile.size / 1024).toFixed(1)} KB</span>
+      `;
 
-  compressBtn.disabled = false;
-});
+      fileList.appendChild(item);
 
-compressBtn.addEventListener("click", async function () {
+      splitBtn.disabled = false;
 
-  if (!selectedFile) {
-    alert("Please select a PDF file first.");
-    return;
-  }
+    });
 
-  compressBtn.disabled = true;
-  compressBtn.textContent = "Compressing...";
-  status.textContent = "Reading PDF...";
 
-  try {
+    function parsePages(input, totalPages) {
 
-    const arrayBuffer = await selectedFile.arrayBuffer();
+      const pages = new Set();
 
-    const pdf = await pdfjsLib.getDocument({
-      data: new Uint8Array(arrayBuffer)
-    }).promise;
+      const parts = input
+        .split(",")
+        .map(part => part.trim())
+        .filter(Boolean);
 
-    const quality = Number(qualitySelect.value);
 
-    const { jsPDF } = window.jspdf;
+      for (const part of parts) {
 
-    let outputPdf = null;
+        if (part.includes("-")) {
 
-    for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
+          const range = part
+            .split("-")
+            .map(value => parseInt(value.trim(), 10));
 
-      status.textContent =
-  `Compressing page ${pageNumber} of ${pdf.numPages}...`;
 
-      const page = await pdf.getPage(pageNumber);
+          if (
+            range.length !== 2 ||
+            Number.isNaN(range[0]) ||
+            Number.isNaN(range[1])
+          ) {
+            throw new Error("Invalid page range.");
+          }
 
-      const originalViewport = page.getViewport({ scale: 1 });
 
-      const scale = 1.5;
+          const start = Math.min(range[0], range[1]);
+          const end = Math.max(range[0], range[1]);
 
-      const viewport = page.getViewport({
-        scale: scale
-      });
 
-      const canvas = document.createElement("canvas");
+          if (start < 1 || end > totalPages) {
+            throw new Error("Page number is outside the PDF.");
+          }
 
-      const context = canvas.getContext("2d", {
-        alpha: false
-      });
 
-      canvas.width = Math.ceil(viewport.width);
-      canvas.height = Math.ceil(viewport.height);
+          for (let i = start; i <= end; i++) {
+            pages.add(i);
+          }
 
-      context.fillStyle = "#ffffff";
-      context.fillRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      );
+        } else {
 
-      await page.render({
-        canvasContext: context,
-        viewport: viewport
-      }).promise;
+          const page = parseInt(part, 10);
 
-      const imageData = canvas.toDataURL(
-        "image/jpeg",
-        quality
-      );
 
-      const pageWidth = 210;
+          if (
+            Number.isNaN(page) ||
+            page < 1 ||
+            page > totalPages
+          ) {
+            throw new Error("Invalid page number.");
+          }
 
-      const pageHeight =
-        pageWidth *
-        originalViewport.height /
-        originalViewport.width;
 
-      if (!outputPdf) {
+          pages.add(page);
 
-        outputPdf = new jsPDF({
-          orientation:
-            pageHeight > pageWidth
-              ? "portrait"
-              : "landscape",
-
-          unit: "mm",
-
-          format: [
-            pageWidth,
-            pageHeight
-          ],
-
-          compress: true
-        });
-
-      } else {
-
-        outputPdf.addPage(
-          [
-            pageWidth,
-            pageHeight
-          ],
-          pageHeight > pageWidth
-            ? "portrait"
-            : "landscape"
-        );
+        }
 
       }
 
-      outputPdf.addImage(
-        imageData,
-        "JPEG",
-        0,
-        0,
-        pageWidth,
-        pageHeight,
-        undefined,
-        "FAST"
-      );
 
-      canvas.width = 1;
-      canvas.height = 1;
+      return Array.from(pages).sort((a, b) => a - b);
+
     }
 
-    status.textContent = "Creating compressed PDF...";
 
-    const pdfBlob = outputPdf.output("blob");
-    const originalSize = selectedFile.size;
-    const compressedSize = pdfBlob.size;
+    splitBtn.addEventListener("click", async function () {
 
-    const sizeChange = originalSize > 0
-    ? ((originalSize - compressedSize) / originalSize) * 100
-    : 0;
+      if (!selectedFile) {
 
-   if (compressedSize >= originalSize) {
-   status.textContent =
-    "The PDF could not be reduced in size. The output may be larger than the original.";
-   } else {
-   status.textContent =
-    `PDF size reduced by ${sizeChange.toFixed(1)}%.`;
-   }
+        alert("Please select a PDF file first.");
+        return;
 
-    const url = URL.createObjectURL(pdfBlob);
+      }
 
-    const link = document.createElement("a");
 
-    link.href = url;
-    link.download = "paperdesk-compressed.pdf";
+      const pageText = pageInput.value.trim();
 
-    document.body.appendChild(link);
 
-    link.click();
+      if (!pageText) {
 
-    document.body.removeChild(link);
+        alert("Please enter the pages you want to extract.");
+        return;
 
-    setTimeout(() => {
-      URL.revokeObjectURL(url);
-    }, 2000);
+      }
 
-    status.textContent += " Download started.";
 
-  } catch (error) {
+      splitBtn.disabled = true;
+      splitBtn.textContent = "Splitting...";
+      status.textContent = "Processing your PDF...";
 
-    console.error("Compress PDF Error:", error);
 
-    alert(
-      "Could not compress this PDF. Please try another PDF file."
-    );
+      try {
 
-    status.textContent = "";
+        const bytes = await selectedFile.arrayBuffer();
 
-  } finally {
+        const sourcePdf =
+          await PDFLib.PDFDocument.load(bytes);
 
-    compressBtn.disabled = false;
-    compressBtn.textContent = "Compress PDF";
+        const totalPages =
+          sourcePdf.getPageCount();
 
-  }
+        const pagesToExtract =
+          parsePages(pageText, totalPages);
 
-});
+        const newPdf =
+          await PDFLib.PDFDocument.create();
 
-</script>
+        const copiedPages =
+          await newPdf.copyPages(
+            sourcePdf,
+            pagesToExtract.map(page => page - 1)
+          );
+
+
+        copiedPages.forEach(page => {
+          newPdf.addPage(page);
+        });
+
+
+        const outputBytes =
+          await newPdf.save();
+
+
+        const blob = new Blob(
+          [outputBytes],
+          { type: "application/pdf" }
+        );
+
+
+        const url =
+          URL.createObjectURL(blob);
+
+
+        const link =
+          document.createElement("a");
+
+        link.href = url;
+        link.download = "paperdesk-split.pdf";
+
+        document.body.appendChild(link);
+
+        link.click();
+
+        link.remove();
+
+        setTimeout(function () {
+          URL.revokeObjectURL(url);
+        }, 5000);
+
+
+        status.textContent =
+          "PDF split successfully!";
+
+
+      } catch (error) {
+
+        console.error(error);
+
+        alert(
+          error.message ||
+          "Could not split the PDF. Please try again."
+        );
+
+        status.textContent = "";
+
+      }
+
+
+      splitBtn.disabled = false;
+      splitBtn.textContent = "Split PDF";
+
+    });
+
+  </script>
 
 </body>
 </html>
