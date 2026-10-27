@@ -53,225 +53,8 @@
   }
   </script>
 
-  <style>
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f8fafc;
-      color: #1e293b;
-      line-height: 1.6;
-    }
-
-    header {
-      background: #ffffff;
-      border-bottom: 1px solid #e2e8f0;
-      padding: 18px 24px;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .nav {
-      max-width: 1100px;
-      margin: auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    .logo {
-      font-size: 24px;
-      font-weight: 700;
-      color: #2563eb;
-      text-decoration: none;
-    }
-
-    nav {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    nav a {
-      color: #475569;
-      text-decoration: none;
-      font-size: 15px;
-    }
-
-    nav a:hover,
-    nav a.active {
-      color: #2563eb;
-    }
-
-    main {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 70px 24px;
-    }
-
-    .hero {
-      text-align: center;
-      margin-bottom: 45px;
-    }
-
-    .hero h1 {
-      font-size: 42px;
-      margin-bottom: 14px;
-      color: #0f172a;
-    }
-
-    .hero p {
-      max-width: 650px;
-      margin: auto;
-      color: #64748b;
-      font-size: 17px;
-    }
-
-    .contact-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 28px;
-    }
-
-    .card {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 16px;
-      padding: 30px;
-      box-shadow: 0 8px 25px rgba(15, 23, 42, 0.05);
-    }
-
-    .card h2 {
-      font-size: 22px;
-      margin-bottom: 16px;
-      color: #0f172a;
-    }
-
-    .card p {
-      color: #64748b;
-      margin-bottom: 18px;
-    }
-
-    .contact-list {
-      list-style: none;
-    }
-
-    .contact-list li {
-      margin-bottom: 14px;
-    }
-
-    .contact-list a {
-      color: #2563eb;
-      text-decoration: none;
-    }
-
-    .contact-list a:hover {
-      text-decoration: underline;
-    }
-
-    .inquiry-list {
-      padding-left: 20px;
-      color: #475569;
-    }
-
-    .inquiry-list li {
-      margin-bottom: 10px;
-    }
-
-    .info-card {
-      margin-top: 28px;
-    }
-
-    .cta {
-      margin-top: 28px;
-      text-align: center;
-      background: #eff6ff;
-      border: 1px solid #dbeafe;
-      border-radius: 16px;
-      padding: 30px;
-    }
-
-    .cta h2 {
-      color: #0f172a;
-      margin-bottom: 10px;
-    }
-
-    .cta p {
-      color: #64748b;
-      margin-bottom: 20px;
-    }
-
-    .button {
-      display: inline-block;
-      background: #2563eb;
-      color: #ffffff;
-      padding: 12px 22px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .button:hover {
-      background: #1d4ed8;
-    }
-
-    footer {
-      border-top: 1px solid #e2e8f0;
-      background: #ffffff;
-      padding: 30px 24px;
-      text-align: center;
-      margin-top: 30px;
-    }
-
-    footer p {
-      color: #64748b;
-      font-size: 14px;
-      margin-bottom: 12px;
-    }
-
-    footer a {
-      color: #475569;
-      text-decoration: none;
-      margin: 0 8px;
-      font-size: 14px;
-    }
-
-    footer a:hover {
-      color: #2563eb;
-    }
-
-    @media (max-width: 700px) {
-
-      .nav {
-        flex-direction: column;
-      }
-
-      nav {
-        justify-content: center;
-      }
-
-      .hero h1 {
-        font-size: 32px;
-      }
-
-      .contact-grid {
-        grid-template-columns: 1fr;
-      }
-
-      main {
-        padding: 50px 18px;
-      }
-
-    }
-
-  </style>
+  <!-- Site stylesheet -->
+  <link rel="stylesheet" href="/style.css">
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-TLH5QYXFN6"></script>
@@ -292,19 +75,20 @@
 
   <!-- ================= HEADER ================= -->
 
-  <header>
+  <header class="site-header">
 
-    <div class="nav">
+    <div class="navbar">
 
       <a href="/" class="logo">
-        PaperDesk
+        Paper<span>Desk</span>
       </a>
 
-      <nav>
+      <nav class="nav-links">
 
         <a href="/">
           Home
         </a>
+
         <a href="/guides.html">
           Guides
         </a>
@@ -313,7 +97,7 @@
           About
         </a>
 
-        <a href="/contact.html" class="active">
+        <a href="/contact.html" style="color: var(--primary);">
           Contact
         </a>
 
@@ -332,102 +116,132 @@
   </header>
 
 
-  <!-- ================= MAIN ================= -->
+  <!-- ================= HERO ================= -->
 
-  <main>
+  <section class="hero">
 
-    <!-- HERO -->
+    <span class="hero-badge">
+      Get in touch
+    </span>
 
-    <section class="hero">
+    <h1>
+      Contact <span>Us</span>
+    </h1>
 
-      <h1>
-        Contact Us
-      </h1>
+    <p>
+      Have a question, feedback, or business inquiry?
+      We'd love to hear from you. Get in touch with the PaperDesk team.
+    </p>
 
-      <p>
-        Have a question, feedback, or business inquiry?
-        We'd love to hear from you. Get in touch with the PaperDesk team.
-      </p>
+    <div class="hero-actions">
 
-    </section>
+      <a
+        href="mailto:zainabfuzail098@gmail.com?subject=PaperDesk%20Inquiry"
+        class="btn btn-primary"
+      >
+        Email PaperDesk
+      </a>
+
+      <a
+        href="https://mail.google.com/mail/?view=cm&fs=1&to=zainabfuzail098@gmail.com&su=PaperDesk%20Inquiry"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn btn-secondary"
+      >
+        Write in Gmail
+      </a>
+
+    </div>
+
+  </section>
 
 
-    <!-- CONTACT CARDS -->
+  <!-- ================= CONTACT CARDS ================= -->
 
-    <section class="contact-grid">
+  <section class="section">
+
+    <div class="tools-grid">
 
 
       <!-- NEED HELP -->
 
-      <div class="card">
+      <div class="tool-card">
 
-        <h2>
+        <div class="tool-icon">
+          ✉️
+        </div>
+
+        <h3>
           Need Help?
-        </h2>
+        </h3>
 
         <p>
           If you have questions about PaperDesk tools, need assistance,
           or would like to share feedback, feel free to contact us.
         </p>
 
-        <ul class="contact-list">
+        <p>
 
-          <li>
+          <strong>
+            Email:
+          </strong>
 
-            <strong>
-              Email:
-            </strong>
+          <a
+            class="tool-link"
+            href="mailto:zainabfuzail098@gmail.com?subject=PaperDesk%20Inquiry"
+          >
+            zainabfuzail098@gmail.com
+          </a>
 
-            <a href="mailto:zainabfuzail098@gmail.com?subject=PaperDesk%20Inquiry">
-              zainabfuzail098@gmail.com
-            </a>
+        </p>
 
-          </li>
+        <p>
 
-          <li>
+          <strong>
+            Location:
+          </strong>
 
-            <strong>
-              Location:
-            </strong>
+          Lahore, Pakistan
 
-            Lahore, Pakistan
+        </p>
 
-          </li>
+        <p>
 
-          <li>
+          <strong>
+            Using Gmail?
+          </strong>
 
-            <strong>
-              Using Gmail?
-            </strong>
+          <a
+            class="tool-link"
+            href="https://mail.google.com/mail/?view=cm&fs=1&to=zainabfuzail098@gmail.com&su=PaperDesk%20Inquiry"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Write in Gmail
+          </a>
 
-            <a
-              href="https://mail.google.com/mail/?view=cm&fs=1&to=zainabfuzail098@gmail.com&su=PaperDesk%20Inquiry"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Write in Gmail
-            </a>
-
-          </li>
-
-        </ul>
+        </p>
 
       </div>
 
 
       <!-- BUSINESS INQUIRIES -->
 
-      <div class="card">
+      <div class="tool-card">
 
-        <h2>
+        <div class="tool-icon">
+          💼
+        </div>
+
+        <h3>
           Business Inquiries
-        </h2>
+        </h3>
 
         <p>
           You can also contact us regarding:
         </p>
 
-        <ul class="inquiry-list">
+        <ul>
 
           <li>
             Business and collaboration inquiries
@@ -453,110 +267,139 @@
 
       </div>
 
-    </section>
+
+      <!-- HOW TO GET A FASTER ANSWER -->
+
+      <div class="tool-card">
+
+        <div class="tool-icon">
+          ⚡
+        </div>
+
+        <h3>
+          How to Get a Faster Answer
+        </h3>
+
+        <p>
+          If you are reporting a problem with a tool, please include the
+          following in your message. It helps us find and fix the issue quickly.
+        </p>
+
+        <ul>
+
+          <li>
+            The name of the tool you were using, for example Merge PDF or Compress PDF
+          </li>
+
+          <li>
+            What you expected to happen and what happened instead
+          </li>
+
+          <li>
+            Your browser and device, for example Chrome on Windows or Safari on iPhone
+          </li>
+
+          <li>
+            Please do not send private or confidential documents by email
+          </li>
+
+        </ul>
+
+      </div>
 
 
-    <!-- WHAT TO INCLUDE -->
+    </div>
 
-    <section class="card info-card">
-
-      <h2>
-        How to Get a Faster Answer
-      </h2>
-
-      <p>
-        If you are reporting a problem with a tool, please include the
-        following in your message. It helps us find and fix the issue quickly.
-      </p>
-
-      <ul class="inquiry-list">
-
-        <li>
-          The name of the tool you were using, for example Merge PDF or Compress PDF
-        </li>
-
-        <li>
-          What you expected to happen and what happened instead
-        </li>
-
-        <li>
-          Your browser and device, for example Chrome on Windows or Safari on iPhone
-        </li>
-
-        <li>
-          Please do not send private or confidential documents by email
-        </li>
-
-      </ul>
-
-      <p style="margin-top: 18px; margin-bottom: 0;">
-        We read every message and aim to reply within a few days.
-        You can also read our <a href="/privacy.html" style="color:#2563eb;">Privacy Policy</a>
-        and <a href="/terms.html" style="color:#2563eb;">Terms of Use</a>,
-        or learn more about the website on the <a href="/about.html" style="color:#2563eb;">About page</a>.
-      </p>
-
-    </section>
+  </section>
 
 
-    <!-- CTA -->
+  <!-- ================= INFO + CTA ================= -->
 
-    <section class="cta">
+  <section class="trust-section">
+
+    <div class="trust-box">
 
       <h2>
         Let's Work Together
       </h2>
 
       <p>
+        We read every message and aim to reply within a few days.
         Have a project or idea you'd like to discuss?
         Send us a message and tell us what you need.
+        You can also read our
+        <a href="/privacy.html" class="tool-link">Privacy Policy</a>
+        and <a href="/terms.html" class="tool-link">Terms of Use</a>,
+        or learn more about the website on the
+        <a href="/about.html" class="tool-link">About page</a>.
       </p>
 
-      <a
-        href="mailto:zainabfuzail098@gmail.com?subject=PaperDesk%20Inquiry"
-        class="button"
-      >
-        Email PaperDesk
-      </a>
+      <div class="action-area">
 
-    </section>
+        <a
+          href="mailto:zainabfuzail098@gmail.com?subject=PaperDesk%20Inquiry"
+          class="btn btn-primary"
+        >
+          Email PaperDesk
+        </a>
 
-  </main>
+      </div>
+
+    </div>
+
+  </section>
 
 
   <!-- ================= FOOTER ================= -->
 
-  <footer>
+  <footer class="site-footer">
 
-    <p>
+    <div class="footer-inner">
+
+      <div class="footer-brand">
+
+        <h3>
+          PaperDesk
+        </h3>
+
+        <p>
+          Simple, fast and professional PDF tools that work right in your browser.
+        </p>
+
+      </div>
+
+      <div class="footer-links">
+
+        <a href="/">
+          Home
+        </a>
+
+        <a href="/guides.html">
+          Guides
+        </a>
+
+        <a href="/about.html">
+          About
+        </a>
+
+        <a href="/privacy.html">
+          Privacy Policy
+        </a>
+
+        <a href="/terms.html">
+          Terms &amp; Conditions
+        </a>
+
+        <a href="/contact.html">
+          Contact Us
+        </a>
+
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
       © 2026 PaperDesk. All rights reserved.
-    </p>
-
-    <div>
-
-      <a href="/">
-        Home
-      </a>
-      <a href="/guides.html">
-        Guides
-      </a>
-
-      <a href="/about.html">
-        About
-      </a>
-
-      <a href="/privacy.html">
-        Privacy Policy
-      </a>
-
-      <a href="/terms.html">
-        Terms &amp; Conditions
-      </a>
-
-      <a href="/contact.html">
-        Contact Us
-      </a>
-
     </div>
 
   </footer>
