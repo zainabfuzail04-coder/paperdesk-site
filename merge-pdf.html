@@ -41,7 +41,7 @@
         "name": "Is PaperDesk Merge PDF free?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes. You can merge PDF files with PaperDesk without paying and without creating an account."
+          "text": "Yes. You can merge PDF files without paying and without creating an account."
         }
       },
       {
@@ -54,10 +54,26 @@
       },
       {
         "@type": "Question",
-        "name": "Can I change the order of the merged files?",
+        "name": "Can I change the order of the files?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Files are merged in the order they appear in the list. Remove a file with the cross button and add it again to place it last."
+          "text": "Files are merged in the order shown in the list. To place a file last, remove it with the ✕ button and add it again."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is there a limit on the number of files?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "There is no fixed limit in the tool. The practical limit depends on your device memory and the size of your PDFs."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why do I see an error when merging?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The file may be damaged, password-protected or not a real PDF. Try opening it in a PDF viewer first, or remove the protection and try again."
         }
       }
     ]
@@ -338,7 +354,7 @@
 
 
   <!-- PDF-LIB -->
-  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 
 
   <!-- MERGE SCRIPT -->
